@@ -1,0 +1,25 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: yas-default-mtls
+  namespace: {{ .Values.namespace }}
+spec:
+  host: "*.{{ .Values.namespace }}.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: yas-search-policy
+  namespace: {{ .Values.namespace }}
+spec:
+  host: search
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+    outlierDetection:
+      consecutive5xxErrors: 3
+      interval: 15s
+      baseEjectionTime: 60s

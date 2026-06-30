@@ -1,0 +1,34 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: yas-api
+  namespace: {{ .Values.namespace }}
+spec:
+  hosts:
+    - {{ .Values.hosts.api | quote }}
+  gateways:
+    - yas-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /search
+      route:
+        - destination:
+            host: search
+            port:
+              number: 80
+      retries:
+        attempts: {{ .Values.retry.attempts }}
+        perTryTimeout: {{ .Values.retry.perTryTimeout }}
+        retryOn: 5xx,reset,connect-failure
+      timeout: {{ .Values.timeout.search }}
+    - route:
+        - destination:
+            host: storefront-bff
+            port:
+              number: 80
+      retries:
+        attempts: {{ .Values.retry.attempts }}
+        perTryTimeout: {{ .Values.retry.perTryTimeout }}
+        retryOn: 5xx,reset,connect-failure
+      timeout: {{ .Values.timeout.default }}

@@ -1,0 +1,19 @@
+namespace: yas-dev
+
+hosts:
+  api: api.yas.dev.com
+  storefront: storefront.yas.dev.com
+  backoffice: backoffice.yas.dev.com
+  keycloak: identity.yas.dev.com
+
+mtls:
+  mode: STRICT
+
+retry:
+  attempts: 3
+  perTryTimeout: 5s
+
+timeout:
+  default: 30s
+  search: 45s
+  keycloak: 60s

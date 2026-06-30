@@ -1,0 +1,4 @@
+ui:
+  image:
+    repository: thu2005/yas-storefront
+    tag: main

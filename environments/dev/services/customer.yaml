@@ -1,0 +1,4 @@
+backend:
+  image:
+    repository: thu2005/yas-customer
+    tag: main

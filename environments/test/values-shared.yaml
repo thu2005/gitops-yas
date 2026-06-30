@@ -1,0 +1,61 @@
+global:
+  environment: test
+  domain: yas.test.local.com
+  identityDomain: identity.yas.test.local.com
+  keycloakInternalIP: ""
+  redisHost: redis-master
+
+backend:
+  replicaCount: 1
+  databaseConnectionUrl: jdbc:postgresql://postgresql:5432
+  serviceMonitor:
+    enabled: false
+  image:
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+
+ui:
+  replicaCount: 1
+  image:
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+
+credentials:
+  postgresql:
+    username: yasadminuser
+    password: admin
+  elasticsearch:
+    username: yas
+    password: LarUmB3A49NTg9YmgW4=
+  redis:
+    password: redis
+  openai:
+    apiKey: update-me
+
+redis:
+  architecture: standalone
+  auth:
+    enabled: true
+    password: redis
+
+keycloak:
+  hostname: identity.yas.test.local.com
+  backofficeRedirectUrl: http://backoffice.yas.test.local.com
+  storefrontRedirectUrl: http://storefront.yas.test.local.com
+
+kafka:
+  kafka:
+    replicas: 1
+  zookeeper:
+    replicas: 1
+    storeSize: 5Gi
+
+elasticsearch:
+  replicas: 1
+
+kibana:
+  ingress:
+    className: nginx
+    hostname: kibana.yas.test.local.com
