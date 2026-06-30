@@ -3,3 +3,5 @@ redis:
   auth:
     enabled: true
     password: redis
+  image:
+    tag: latest
