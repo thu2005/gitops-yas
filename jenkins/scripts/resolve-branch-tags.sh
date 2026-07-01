@@ -4,6 +4,9 @@ set -euo pipefail
 source_repo_url="${SOURCE_REPO_URL:-https://github.com/thu2005/yas.git}"
 target_env="${TARGET_ENV:-dev}"
 output_file="${1:-developer-build-plan.tsv}"
+values_file="helm/yas/values-${target_env}.yaml"
+argocd_app="yas-${target_env}"
+cluster_name="gke"
 
 normalize_branch() {
   local branch="${1:-main}"
@@ -38,13 +41,13 @@ branch_value() {
 }
 
 write_service() {
-  local service="$1"
+  local service_name="$1"
   local branch_env="$2"
-  local image_key="$3"
-  local values_file="environments/${target_env}/services/${service}.yaml"
-
+  local values_key="$3"
+  local node_port="$4"
   local branch
   local image_tag
+
   branch="$(normalize_branch "$(branch_value "$branch_env")")"
   image_tag="$(resolve_tag "$branch")"
 
@@ -53,25 +56,27 @@ write_service() {
     exit 1
   fi
 
-  printf '%s\t%s\t%s\t%s\t%s\n' \
-    "$service" "$branch" "$image_tag" "$values_file" "$image_key" >> "$output_file"
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+    "$service_name" "$branch" "$image_tag" "$cluster_name" "$values_file" \
+    "$values_key" "$argocd_app" "<gke-node-ip>" "$node_port" >> "$output_file"
 }
 
 printf '' > "$output_file"
 
-write_service "cart"            "TAG_CART"            "backend"
-write_service "tax"             "TAG_TAX"             "backend"
-write_service "order"           "TAG_ORDER"           "backend"
-write_service "product"         "TAG_PRODUCT"         "backend"
-write_service "media"           "TAG_MEDIA"           "backend"
-write_service "customer"        "TAG_CUSTOMER"        "backend"
-write_service "inventory"       "TAG_INVENTORY"       "backend"
-write_service "search"          "TAG_SEARCH"          "backend"
-write_service "sampledata"      "TAG_SAMPLEDATA"      "backend"
-write_service "backoffice-bff"  "TAG_BACKOFFICE_BFF"  "backend"
-write_service "storefront-bff"  "TAG_STOREFRONT_BFF"  "backend"
-write_service "backoffice-ui"   "TAG_BACKOFFICE_UI"   "ui"
-write_service "storefront-ui"   "TAG_STOREFRONT_UI"   "ui"
+write_service "product-service"    "PRODUCT_SERVICE_BRANCH"   "product"       "30005"
+write_service "cart-service"       "CART_SERVICE_BRANCH"      "cart"          "30008"
+write_service "order-service"      "ORDER_SERVICE_BRANCH"     "order"         "30009"
+write_service "customer-service"   "CUSTOMER_SERVICE_BRANCH"  "customer"      "30007"
+write_service "inventory-service"  "INVENTORY_SERVICE_BRANCH" "inventory"     "30010"
+write_service "tax-service"        "TAX_SERVICE_BRANCH"       "tax"           "30011"
+write_service "media-service"      "MEDIA_SERVICE_BRANCH"     "media"         "30006"
+write_service "search-service"     "SEARCH_SERVICE_BRANCH"    "search"        "30012"
+write_service "storefront-bff"     "STOREFRONT_BFF_BRANCH"    "storefront-bff" "30002"
+write_service "storefront-ui"      "STOREFRONT_UI_BRANCH"     "storefront-ui"  "30001"
+write_service "backoffice-bff"     "BACKOFFICE_BFF_BRANCH"    "backoffice-bff" "30004"
+write_service "backoffice-ui"      "BACKOFFICE_UI_BRANCH"     "backoffice-ui"  "30003"
+write_service "sampledata"         "SAMPLEDATA_BRANCH"        "sampledata"     "30013"
+write_service "swagger-ui"         "SWAGGER_UI_BRANCH"        "swagger-ui"     "30014"
 
 echo "Resolved developer build plan:"
 column -t -s $'\t' "$output_file" 2>/dev/null || cat "$output_file"

@@ -6,24 +6,6 @@ pipeline {
         disableConcurrentBuilds()
     }
 
-    parameters {
-        choice(name: 'TARGET_ENV', choices: ['dev', 'staging'], description: 'GitOps environment to update')
-        string(name: 'TAG_CART', defaultValue: 'main', description: 'Branch for cart')
-        string(name: 'TAG_TAX', defaultValue: 'main', description: 'Branch for tax')
-        string(name: 'TAG_ORDER', defaultValue: 'main', description: 'Branch for order')
-        string(name: 'TAG_PRODUCT', defaultValue: 'main', description: 'Branch for product')
-        string(name: 'TAG_MEDIA', defaultValue: 'main', description: 'Branch for media')
-        string(name: 'TAG_CUSTOMER', defaultValue: 'main', description: 'Branch for customer')
-        string(name: 'TAG_INVENTORY', defaultValue: 'main', description: 'Branch for inventory')
-        string(name: 'TAG_SEARCH', defaultValue: 'main', description: 'Branch for search')
-        string(name: 'TAG_SAMPLEDATA', defaultValue: 'main', description: 'Branch for sampledata')
-        string(name: 'TAG_BACKOFFICE_BFF', defaultValue: 'main', description: 'Branch for backoffice-bff')
-        string(name: 'TAG_STOREFRONT_BFF', defaultValue: 'main', description: 'Branch for storefront-bff')
-        string(name: 'TAG_BACKOFFICE_UI', defaultValue: 'main', description: 'Branch for backoffice-ui')
-        string(name: 'TAG_STOREFRONT_UI', defaultValue: 'main', description: 'Branch for storefront-ui')
-        booleanParam(name: 'DRY_RUN', defaultValue: true, description: 'Show changes without pushing GitOps commit')
-    }
-
     environment {
         PLAN_FILE = 'developer-build-plan.tsv'
         SOURCE_REPO_URL = 'https://github.com/thu2005/yas.git'
@@ -31,9 +13,32 @@ pipeline {
         GITOPS_TOKEN_CREDENTIALS_ID = 'github-credentials'
     }
 
+    parameters {
+        choice(name: 'TARGET_ENV', choices: ['dev', 'staging'], description: 'GitOps environment to update')
+
+        string(name: 'PRODUCT_SERVICE_BRANCH', defaultValue: 'main', description: 'Branch for product-service')
+        string(name: 'CART_SERVICE_BRANCH', defaultValue: 'main', description: 'Branch for cart-service')
+        string(name: 'ORDER_SERVICE_BRANCH', defaultValue: 'main', description: 'Branch for order-service')
+        string(name: 'CUSTOMER_SERVICE_BRANCH', defaultValue: 'main', description: 'Branch for customer-service')
+        string(name: 'INVENTORY_SERVICE_BRANCH', defaultValue: 'main', description: 'Branch for inventory-service')
+        string(name: 'TAX_SERVICE_BRANCH', defaultValue: 'main', description: 'Branch for tax-service')
+        string(name: 'MEDIA_SERVICE_BRANCH', defaultValue: 'main', description: 'Branch for media-service')
+        string(name: 'SEARCH_SERVICE_BRANCH', defaultValue: 'main', description: 'Branch for search-service')
+        string(name: 'STOREFRONT_BFF_BRANCH', defaultValue: 'main', description: 'Branch for storefront-bff')
+        string(name: 'STOREFRONT_UI_BRANCH', defaultValue: 'main', description: 'Branch for storefront-ui')
+        string(name: 'BACKOFFICE_BFF_BRANCH', defaultValue: 'main', description: 'Branch for backoffice-bff')
+        string(name: 'BACKOFFICE_UI_BRANCH', defaultValue: 'main', description: 'Branch for backoffice-ui')
+        string(name: 'SAMPLEDATA_BRANCH', defaultValue: 'main', description: 'Branch for sampledata')
+        string(name: 'SWAGGER_UI_BRANCH', defaultValue: 'main', description: 'Branch for swagger-ui')
+
+        booleanParam(name: 'DRY_RUN', defaultValue: true, description: 'Show diff without pushing GitOps commit')
+    }
+
     stages {
         stage('Resolve branches to image tags') {
             steps {
+                echo 'Job: developer_build'
+                echo 'Mode: update GitOps values; Argo CD deploys changed applications.'
                 sh 'bash jenkins/scripts/resolve-branch-tags.sh "$PLAN_FILE"'
             }
         }
@@ -50,29 +55,31 @@ pipeline {
             }
             steps {
                 script {
-                    def gitopsTargetBranch = params.TARGET_ENV == 'staging' ? 'staging' : 'main'
                     def changed = sh(
-                        script: 'git status --porcelain environments/*/services/*.yaml',
+                        script: 'git status --porcelain helm/yas/values-*.yaml',
                         returnStdout: true
                     ).trim()
 
                     if (!changed) {
-                        echo 'No values changes. GitOps already matches requested branches.'
+                        echo 'No values changes. Argo CD is already at requested image tags.'
                         return
                     }
 
+                    def gitopsTargetBranch = params.TARGET_ENV == 'staging' ? 'staging' : 'main'
                     withCredentials([string(credentialsId: env.GITOPS_TOKEN_CREDENTIALS_ID, variable: 'GITOPS_TOKEN')]) {
                         withEnv(["GITOPS_TARGET_BRANCH=${gitopsTargetBranch}"]) {
-                        sh '''
-                            git remote set-url origin https://x-access-token:${GITOPS_TOKEN}@${GITOPS_REPO_URL#https://}
-                            git config user.email "jenkins@local"
-                            git config user.name "jenkins-bot"
-                            git add environments/*/services/*.yaml
-                            git commit -m "developer_build: update ${TARGET_ENV} image tags [build #${BUILD_NUMBER}]"
-                            git push origin HEAD:${GITOPS_TARGET_BRANCH}
-                        '''
+                            sh '''
+                                git remote set-url origin https://x-access-token:${GITOPS_TOKEN}@${GITOPS_REPO_URL#https://}
+                                git config user.email "jenkins@local"
+                                git config user.name "jenkins-bot"
+                                git add helm/yas/values-*.yaml
+                                git commit -m "developer_build: update ${TARGET_ENV} image tags [build #${BUILD_NUMBER}]"
+                                git push origin HEAD:${GITOPS_TARGET_BRANCH}
+                            '''
                         }
                     }
+
+                    echo 'GitOps changes pushed. Argo CD will sync the affected application.'
                 }
             }
         }
@@ -86,10 +93,10 @@ pipeline {
 
     post {
         success {
-            echo 'developer_build GitOps update SUCCESS. Wait for Argo CD to sync the target environment.'
+            echo 'developer_build SUCCESS. Wait for Argo CD sync, then test the printed URLs.'
         }
         failure {
-            echo 'developer_build GitOps update FAILED. Check stage logs.'
+            echo 'developer_build FAILED. Check the stage logs above.'
         }
     }
 }

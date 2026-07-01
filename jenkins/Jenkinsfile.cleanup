@@ -4,32 +4,35 @@ pipeline {
     options {
         timestamps()
         disableConcurrentBuilds()
+        timeout(time: 10, unit: 'MINUTES')
+    }
+
+    environment {
+        GITOPS_REPO_URL = 'https://github.com/thu2005/gitops-yas.git'
+        GITOPS_TOKEN_CREDENTIALS_ID = 'github-credentials'
     }
 
     parameters {
         choice(name: 'TARGET_ENV', choices: ['dev', 'staging'], description: 'GitOps environment to reset')
         choice(name: 'CLEANUP_MODE', choices: ['RESET_TO_MAIN', 'SELECTIVE'], description: 'Reset all services or selected services only')
-        booleanParam(name: 'RESET_CART', defaultValue: false, description: 'Reset cart to main')
-        booleanParam(name: 'RESET_TAX', defaultValue: false, description: 'Reset tax to main')
-        booleanParam(name: 'RESET_ORDER', defaultValue: false, description: 'Reset order to main')
-        booleanParam(name: 'RESET_PRODUCT', defaultValue: false, description: 'Reset product to main')
-        booleanParam(name: 'RESET_MEDIA', defaultValue: false, description: 'Reset media to main')
-        booleanParam(name: 'RESET_CUSTOMER', defaultValue: false, description: 'Reset customer to main')
-        booleanParam(name: 'RESET_INVENTORY', defaultValue: false, description: 'Reset inventory to main')
-        booleanParam(name: 'RESET_SEARCH', defaultValue: false, description: 'Reset search to main')
-        booleanParam(name: 'RESET_SAMPLEDATA', defaultValue: false, description: 'Reset sampledata to main')
-        booleanParam(name: 'RESET_BACKOFFICE_BFF', defaultValue: false, description: 'Reset backoffice-bff to main')
+
+        booleanParam(name: 'RESET_PRODUCT', defaultValue: false, description: 'Reset product-service to main')
+        booleanParam(name: 'RESET_INVENTORY', defaultValue: false, description: 'Reset inventory-service to main')
+        booleanParam(name: 'RESET_SEARCH', defaultValue: false, description: 'Reset search-service to main')
+        booleanParam(name: 'RESET_MEDIA', defaultValue: false, description: 'Reset media-service to main')
+        booleanParam(name: 'RESET_CART', defaultValue: false, description: 'Reset cart-service to main')
+        booleanParam(name: 'RESET_ORDER', defaultValue: false, description: 'Reset order-service to main')
+        booleanParam(name: 'RESET_TAX', defaultValue: false, description: 'Reset tax-service to main')
+        booleanParam(name: 'RESET_STOREFRONT_UI', defaultValue: false, description: 'Reset storefront-ui to main')
         booleanParam(name: 'RESET_STOREFRONT_BFF', defaultValue: false, description: 'Reset storefront-bff to main')
         booleanParam(name: 'RESET_BACKOFFICE_UI', defaultValue: false, description: 'Reset backoffice-ui to main')
-        booleanParam(name: 'RESET_STOREFRONT_UI', defaultValue: false, description: 'Reset storefront-ui to main')
-        booleanParam(name: 'DRY_RUN', defaultValue: true, description: 'Show changes without pushing GitOps commit')
-        booleanParam(name: 'CONFIRM', defaultValue: false, description: 'Required when DRY_RUN=false')
-    }
+        booleanParam(name: 'RESET_BACKOFFICE_BFF', defaultValue: false, description: 'Reset backoffice-bff to main')
+        booleanParam(name: 'RESET_CUSTOMER', defaultValue: false, description: 'Reset customer-service to main')
+        booleanParam(name: 'RESET_SAMPLEDATA', defaultValue: false, description: 'Reset sampledata to main')
+        booleanParam(name: 'RESET_SWAGGER_UI', defaultValue: false, description: 'Reset swagger-ui to main')
 
-    environment {
-        PLAN_FILE = 'cleanup-plan.tsv'
-        GITOPS_REPO_URL = 'https://github.com/thu2005/gitops-yas.git'
-        GITOPS_TOKEN_CREDENTIALS_ID = 'github-credentials'
+        booleanParam(name: 'DRY_RUN', defaultValue: true, description: 'Show diff without pushing GitOps commit')
+        booleanParam(name: 'CONFIRM', defaultValue: false, description: 'Required when DRY_RUN=false')
     }
 
     stages {
@@ -46,71 +49,73 @@ pipeline {
         stage('Build cleanup plan') {
             steps {
                 script {
+                    def valuesFile = "helm/yas/values-${params.TARGET_ENV}.yaml"
                     def serviceMap = [
-                        ['cart', 'backend', params.RESET_CART],
-                        ['tax', 'backend', params.RESET_TAX],
-                        ['order', 'backend', params.RESET_ORDER],
-                        ['product', 'backend', params.RESET_PRODUCT],
-                        ['media', 'backend', params.RESET_MEDIA],
-                        ['customer', 'backend', params.RESET_CUSTOMER],
-                        ['inventory', 'backend', params.RESET_INVENTORY],
-                        ['search', 'backend', params.RESET_SEARCH],
-                        ['sampledata', 'backend', params.RESET_SAMPLEDATA],
-                        ['backoffice-bff', 'backend', params.RESET_BACKOFFICE_BFF],
-                        ['storefront-bff', 'backend', params.RESET_STOREFRONT_BFF],
-                        ['backoffice-ui', 'ui', params.RESET_BACKOFFICE_UI],
-                        ['storefront-ui', 'ui', params.RESET_STOREFRONT_UI]
+                        ['product-service', 'product', params.RESET_PRODUCT],
+                        ['inventory-service', 'inventory', params.RESET_INVENTORY],
+                        ['search-service', 'search', params.RESET_SEARCH],
+                        ['media-service', 'media', params.RESET_MEDIA],
+                        ['cart-service', 'cart', params.RESET_CART],
+                        ['order-service', 'order', params.RESET_ORDER],
+                        ['tax-service', 'tax', params.RESET_TAX],
+                        ['storefront-ui', 'storefront-ui', params.RESET_STOREFRONT_UI],
+                        ['storefront-bff', 'storefront-bff', params.RESET_STOREFRONT_BFF],
+                        ['backoffice-ui', 'backoffice-ui', params.RESET_BACKOFFICE_UI],
+                        ['backoffice-bff', 'backoffice-bff', params.RESET_BACKOFFICE_BFF],
+                        ['customer-service', 'customer', params.RESET_CUSTOMER],
+                        ['sampledata', 'sampledata', params.RESET_SAMPLEDATA],
+                        ['swagger-ui', 'swagger-ui', params.RESET_SWAGGER_UI]
                     ]
 
                     def lines = []
                     serviceMap.each { row ->
-                        def service = row[0]
-                        def imageKey = row[1]
+                        def serviceName = row[0]
+                        def valuesKey = row[1]
                         def selected = row[2]
                         if (params.CLEANUP_MODE == 'RESET_TO_MAIN' || selected) {
-                            lines << "${service}\tmain\tmain\tenvironments/${params.TARGET_ENV}/services/${service}.yaml\t${imageKey}"
+                            lines << "${serviceName}\tmain\tmain\tgke\t${valuesFile}\t${valuesKey}\tyas-${params.TARGET_ENV}\tN/A\tN/A"
                         }
                     }
 
-                    writeFile file: env.PLAN_FILE, text: lines.join('\n') + (lines ? '\n' : '')
-                    sh 'cat "$PLAN_FILE"'
+                    writeFile file: 'cleanup-plan.tsv', text: lines.join('\n') + (lines ? '\n' : '')
+                    sh 'cat cleanup-plan.tsv'
                 }
             }
         }
 
-        stage('Reset values') {
+        stage('Reset image tags') {
             steps {
-                sh 'bash jenkins/scripts/update-values.sh "$PLAN_FILE"'
+                sh 'bash jenkins/scripts/update-values.sh cleanup-plan.tsv'
             }
         }
 
-        stage('Commit and push GitOps change') {
+        stage('Commit and push') {
             when {
-                expression { !params.DRY_RUN }
+                expression { !params.DRY_RUN && params.CONFIRM }
             }
             steps {
                 script {
-                    def gitopsTargetBranch = params.TARGET_ENV == 'staging' ? 'staging' : 'main'
                     def changed = sh(
-                        script: 'git status --porcelain environments/*/services/*.yaml',
+                        script: 'git status --porcelain helm/yas/values-*.yaml',
                         returnStdout: true
                     ).trim()
 
                     if (!changed) {
-                        echo 'No values changes. Selected services are already at main.'
+                        echo 'Nothing changed. Selected tags are already at main.'
                         return
                     }
 
+                    def gitopsTargetBranch = params.TARGET_ENV == 'staging' ? 'staging' : 'main'
                     withCredentials([string(credentialsId: env.GITOPS_TOKEN_CREDENTIALS_ID, variable: 'GITOPS_TOKEN')]) {
                         withEnv(["GITOPS_TARGET_BRANCH=${gitopsTargetBranch}"]) {
-                        sh '''
-                            git remote set-url origin https://x-access-token:${GITOPS_TOKEN}@${GITOPS_REPO_URL#https://}
-                            git config user.email "jenkins@local"
-                            git config user.name "jenkins-bot"
-                            git add environments/*/services/*.yaml
-                            git commit -m "cleanup: reset ${TARGET_ENV} image tags to main [build #${BUILD_NUMBER}]"
-                            git push origin HEAD:${GITOPS_TARGET_BRANCH}
-                        '''
+                            sh '''
+                                git remote set-url origin https://x-access-token:${GITOPS_TOKEN}@${GITOPS_REPO_URL#https://}
+                                git config user.email "jenkins@local"
+                                git config user.name "jenkins-bot"
+                                git add helm/yas/values-*.yaml
+                                git commit -m "cleanup: reset ${TARGET_ENV} image tags to main [build #${BUILD_NUMBER}]"
+                                git push origin HEAD:${GITOPS_TARGET_BRANCH}
+                            '''
                         }
                     }
                 }

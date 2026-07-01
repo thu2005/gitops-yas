@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: yas-staging
+  namespace: argocd
+spec:
+  project: yas
+  source:
+    repoURL: https://github.com/thu2005/gitops-yas.git
+    targetRevision: staging
+    path: helm/yas
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-staging.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: yas-staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

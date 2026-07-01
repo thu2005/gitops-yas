@@ -17,31 +17,24 @@ if [[ -z "$node_address" ]] && command -v kubectl >/dev/null 2>&1; then
     node_address="$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}' 2>/dev/null || true)"
   fi
 fi
-node_address="${node_address:-<worker-node-ip>}"
+node_address="${node_address:-<gke-node-ip>}"
 
 echo ""
+echo "Argo CD application:"
+echo "  yas-${target_env}"
+echo ""
 echo "Developer build plan:"
-printf "  %-18s %-28s %-12s\n" "SERVICE" "BRANCH" "IMAGE_TAG"
-printf "  %-18s %-28s %-12s\n" "-------" "------" "---------"
-while IFS=$'\t' read -r service branch image_tag values_file image_key; do
-  [[ -n "${service:-}" ]] || continue
-  printf "  %-18s %-28s %-12s\n" "$service" "$branch" "$image_tag"
+printf "  %-20s %-28s %-12s %-22s\n" "SERVICE" "BRANCH" "IMAGE_TAG" "URL"
+printf "  %-20s %-28s %-12s %-22s\n" "-------" "------" "---------" "---"
+
+while IFS=$'\t' read -r svc_name branch image_tag cluster_name values_file values_key argocd_app access_host node_port; do
+  [[ -n "${svc_name:-}" ]] || continue
+  url="http://${node_address}:${node_port}"
+  printf "  %-20s %-28s %-12s %-22s\n" "$svc_name" "$branch" "$image_tag" "$url"
 done < "$plan_file"
 
 echo ""
-echo "Access URLs after Argo CD sync:"
-echo "  Namespace: ${namespace}"
-echo "  Node:      ${node_address}"
-
-for svc in storefront-ui backoffice-ui swagger-ui; do
-  node_port=""
-  if command -v kubectl >/dev/null 2>&1; then
-    node_port="$(kubectl get svc "$svc" -n "$namespace" -o jsonpath='{.spec.ports[0].nodePort}' 2>/dev/null || true)"
-  fi
-
-  if [[ -n "$node_port" ]]; then
-    echo "  ${svc}: http://${node_address}:${node_port}"
-  else
-    echo "  ${svc}: NodePort not available yet. Wait for Argo CD sync, then run: kubectl get svc ${svc} -n ${namespace}"
-  fi
-done
+echo "Wait for Argo CD sync, then verify:"
+echo "  kubectl get app yas-${target_env} -n argocd"
+echo "  kubectl get pods -n ${namespace}"
+echo "  kubectl get svc storefront-ui backoffice-ui swagger-ui -n ${namespace}"

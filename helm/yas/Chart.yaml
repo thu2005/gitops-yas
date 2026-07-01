@@ -1,0 +1,6 @@
+apiVersion: v2
+name: yas
+description: Dynamic Helm chart for YAS GitOps deployments
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

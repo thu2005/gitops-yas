@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: yas
+  namespace: argocd
+spec:
+  description: YAS GitOps project
+  sourceRepos:
+    - https://github.com/thu2005/gitops-yas.git
+  destinations:
+    - namespace: yas-dev
+      server: https://kubernetes.default.svc
+    - namespace: yas-staging
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

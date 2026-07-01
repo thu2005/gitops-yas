@@ -1,4 +1,0 @@
-backend:
-  image:
-    repository: thu2005/yas-storefront-bff
-    tag: main

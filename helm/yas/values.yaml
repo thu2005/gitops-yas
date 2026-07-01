@@ -1,0 +1,314 @@
+global:
+  environment: dev
+
+credentials:
+  postgresql:
+    username: yasadminuser
+    password: admin
+  elasticsearch:
+    username: yas
+    password: LarUmB3A49NTg9YmgW4=
+  keycloak:
+    backofficeBffClientSecret: TVacLC0cQ8tiiEKiTVerTb2YvwQ1TRJF
+    storefrontBffClientSecret: ZrU9I0q2uXBglBnmvyJdkl1lf0ncr8tn
+    customerManagementClientSecret: NKAr3rnjwm9jlakgKpelukZGFaHYqIWE
+  redis:
+    password: redis
+  openai:
+    apiKey: update-me
+
+applicationConfig:
+  server:
+    shutdown: graceful
+    port: 80
+  management:
+    server:
+      port: 8090
+    health:
+      readinessstate:
+        enabled: true
+      livenessstate:
+        enabled: true
+    endpoints:
+      web:
+        exposure:
+          include: prometheus, health
+    endpoint:
+      health:
+        probes:
+          enabled: true
+        show-details: always
+  spring:
+    lifecycle:
+      timeout-per-shutdown-phase: 30s
+    datasource:
+      username: ${POSTGRESQL_USERNAME}
+      password: ${POSTGRESQL_PASSWORD}
+    kafka:
+      bootstrap-servers: kafka-cluster-kafka-brokers.kafka:9092
+  yas:
+    services:
+      cart: http://cart/cart
+      customer: http://customer/customer
+      inventory: http://inventory/inventory
+      media: http://media/media
+      order: http://order/order
+      product: http://product/product
+      search: http://search/search
+      tax: http://tax/tax
+      sampledata: http://sampledata/sampledata
+
+logbackConfig: |
+  <configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+        <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+      </encoder>
+    </appender>
+    <root level="INFO">
+      <appender-ref ref="STDOUT" />
+    </root>
+  </configuration>
+
+gatewayRoutesConfig: {}
+backofficeBffExtraConfig: {}
+storefrontBffExtraConfig: {}
+mediaApplicationConfig: {}
+customerApplicationConfig: {}
+searchApplicationConfig: {}
+cartApplicationConfig: {}
+orderApplicationConfig: {}
+paymentApplicationConfig: {}
+paymentPaypalApplicationConfig: {}
+productApplicationConfig: {}
+recommendationApplicationConfig: {}
+sampledataApplicationConfig: {}
+
+storefront-ui:
+  enabled: false
+  image:
+    repository: thu2005/yas-storefront
+    tag: main
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  service:
+    type: NodePort
+    port: 3000
+    nodePort: 30001
+  env: {}
+  secrets: {}
+
+storefront-bff:
+  enabled: false
+  image:
+    repository: thu2005/yas-storefront-bff
+    tag: main
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30002
+  env: {}
+  secrets: {}
+  isBackend: true
+
+backoffice-ui:
+  enabled: false
+  image:
+    repository: thu2005/yas-backoffice
+    tag: main
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  service:
+    type: NodePort
+    port: 3000
+    nodePort: 30003
+  env: {}
+  secrets: {}
+
+backoffice-bff:
+  enabled: false
+  image:
+    repository: thu2005/yas-backoffice-bff
+    tag: main
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30004
+  env: {}
+  secrets: {}
+  isBackend: true
+
+product:
+  enabled: false
+  image:
+    repository: thu2005/yas-product
+    tag: main
+  resources: &backendResources
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30005
+  env: {}
+  secrets: {}
+  isBackend: true
+
+media:
+  enabled: false
+  image:
+    repository: thu2005/yas-media
+    tag: main
+  resources: *backendResources
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30006
+  env: {}
+  secrets: {}
+  isBackend: true
+
+customer:
+  enabled: false
+  image:
+    repository: thu2005/yas-customer
+    tag: main
+  resources: *backendResources
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30007
+  env: {}
+  secrets: {}
+  isBackend: true
+
+cart:
+  enabled: false
+  image:
+    repository: thu2005/yas-cart
+    tag: main
+  resources: *backendResources
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30008
+  env: {}
+  secrets: {}
+  isBackend: true
+
+order:
+  enabled: false
+  image:
+    repository: thu2005/yas-order
+    tag: main
+  resources: *backendResources
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30009
+  env: {}
+  secrets: {}
+  isBackend: true
+
+inventory:
+  enabled: false
+  image:
+    repository: thu2005/yas-inventory
+    tag: main
+  resources: *backendResources
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30010
+  env: {}
+  secrets: {}
+  isBackend: true
+
+tax:
+  enabled: false
+  image:
+    repository: thu2005/yas-tax
+    tag: main
+  resources: *backendResources
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30011
+  env: {}
+  secrets: {}
+  isBackend: true
+
+search:
+  enabled: false
+  image:
+    repository: thu2005/yas-search
+    tag: main
+  resources: *backendResources
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30012
+  env: {}
+  secrets: {}
+  isBackend: true
+
+sampledata:
+  enabled: false
+  image:
+    repository: thu2005/yas-sampledata
+    tag: main
+  resources: *backendResources
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30013
+  env: {}
+  secrets: {}
+  isBackend: true
+
+swagger-ui:
+  enabled: false
+  image:
+    repository: swaggerapi/swagger-ui
+    tag: v5.17.14
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 50m
+    limits:
+      memory: 256Mi
+      cpu: 250m
+  service:
+    type: NodePort
+    port: 8080
+    nodePort: 30014
+  env: {}
+  secrets: {}

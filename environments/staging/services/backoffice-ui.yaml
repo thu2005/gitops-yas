@@ -1,4 +1,0 @@
-ui:
-  image:
-    repository: thu2005/yas-backoffice
-    tag: main

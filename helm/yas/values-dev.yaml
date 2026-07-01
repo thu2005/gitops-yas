@@ -1,0 +1,59 @@
+global:
+  environment: dev
+
+storefront-ui:
+  enabled: true
+  image:
+    tag: main
+storefront-bff:
+  enabled: true
+  image:
+    tag: main
+backoffice-ui:
+  enabled: true
+  image:
+    tag: main
+backoffice-bff:
+  enabled: true
+  image:
+    tag: main
+product:
+  enabled: true
+  image:
+    tag: main
+media:
+  enabled: true
+  image:
+    tag: main
+customer:
+  enabled: true
+  image:
+    tag: main
+cart:
+  enabled: true
+  image:
+    tag: main
+order:
+  enabled: true
+  image:
+    tag: main
+inventory:
+  enabled: true
+  image:
+    tag: main
+tax:
+  enabled: true
+  image:
+    tag: main
+search:
+  enabled: true
+  image:
+    tag: main
+sampledata:
+  enabled: true
+  image:
+    tag: main
+swagger-ui:
+  enabled: true
+  image:
+    tag: v5.17.14
