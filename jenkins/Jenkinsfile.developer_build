@@ -1,0 +1,95 @@
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    parameters {
+        choice(name: 'TARGET_ENV', choices: ['dev', 'staging'], description: 'GitOps environment to update')
+        string(name: 'TAG_CART', defaultValue: 'main', description: 'Branch for cart')
+        string(name: 'TAG_TAX', defaultValue: 'main', description: 'Branch for tax')
+        string(name: 'TAG_ORDER', defaultValue: 'main', description: 'Branch for order')
+        string(name: 'TAG_PRODUCT', defaultValue: 'main', description: 'Branch for product')
+        string(name: 'TAG_MEDIA', defaultValue: 'main', description: 'Branch for media')
+        string(name: 'TAG_CUSTOMER', defaultValue: 'main', description: 'Branch for customer')
+        string(name: 'TAG_INVENTORY', defaultValue: 'main', description: 'Branch for inventory')
+        string(name: 'TAG_SEARCH', defaultValue: 'main', description: 'Branch for search')
+        string(name: 'TAG_SAMPLEDATA', defaultValue: 'main', description: 'Branch for sampledata')
+        string(name: 'TAG_BACKOFFICE_BFF', defaultValue: 'main', description: 'Branch for backoffice-bff')
+        string(name: 'TAG_STOREFRONT_BFF', defaultValue: 'main', description: 'Branch for storefront-bff')
+        string(name: 'TAG_BACKOFFICE_UI', defaultValue: 'main', description: 'Branch for backoffice-ui')
+        string(name: 'TAG_STOREFRONT_UI', defaultValue: 'main', description: 'Branch for storefront-ui')
+        booleanParam(name: 'DRY_RUN', defaultValue: true, description: 'Show changes without pushing GitOps commit')
+    }
+
+    environment {
+        PLAN_FILE = 'developer-build-plan.tsv'
+        SOURCE_REPO_URL = 'https://github.com/thu2005/yas.git'
+        GITOPS_REPO_URL = 'https://github.com/thu2005/gitops-yas.git'
+        GITOPS_TOKEN_CREDENTIALS_ID = 'github-credentials'
+    }
+
+    stages {
+        stage('Resolve branches to image tags') {
+            steps {
+                sh 'bash jenkins/scripts/resolve-branch-tags.sh "$PLAN_FILE"'
+            }
+        }
+
+        stage('Update GitOps values') {
+            steps {
+                sh 'bash jenkins/scripts/update-values.sh "$PLAN_FILE"'
+            }
+        }
+
+        stage('Commit and push GitOps change') {
+            when {
+                expression { !params.DRY_RUN }
+            }
+            steps {
+                script {
+                    def gitopsTargetBranch = params.TARGET_ENV == 'staging' ? 'staging' : 'main'
+                    def changed = sh(
+                        script: 'git status --porcelain environments/*/services/*.yaml',
+                        returnStdout: true
+                    ).trim()
+
+                    if (!changed) {
+                        echo 'No values changes. GitOps already matches requested branches.'
+                        return
+                    }
+
+                    withCredentials([string(credentialsId: env.GITOPS_TOKEN_CREDENTIALS_ID, variable: 'GITOPS_TOKEN')]) {
+                        withEnv(["GITOPS_TARGET_BRANCH=${gitopsTargetBranch}"]) {
+                        sh '''
+                            git remote set-url origin https://x-access-token:${GITOPS_TOKEN}@${GITOPS_REPO_URL#https://}
+                            git config user.email "jenkins@local"
+                            git config user.name "jenkins-bot"
+                            git add environments/*/services/*.yaml
+                            git commit -m "developer_build: update ${TARGET_ENV} image tags [build #${BUILD_NUMBER}]"
+                            git push origin HEAD:${GITOPS_TARGET_BRANCH}
+                        '''
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Print access URLs') {
+            steps {
+                sh 'bash jenkins/scripts/print-access-urls.sh "$PLAN_FILE"'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'developer_build GitOps update SUCCESS. Wait for Argo CD to sync the target environment.'
+        }
+        failure {
+            echo 'developer_build GitOps update FAILED. Check stage logs.'
+        }
+    }
+}

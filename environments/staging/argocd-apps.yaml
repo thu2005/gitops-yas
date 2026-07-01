@@ -31,7 +31,7 @@ spec:
       project: default
       source:
         repoURL: https://github.com/thu2005/gitops-yas.git
-        targetRevision: HEAD
+        targetRevision: staging
         path: charts/{{service}}
         helm:
           ignoreMissingValueFiles: true
@@ -57,7 +57,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/thu2005/gitops-yas.git
-    targetRevision: HEAD
+    targetRevision: staging
     path: infrastructure/istio-configs
     helm:
       parameters:
