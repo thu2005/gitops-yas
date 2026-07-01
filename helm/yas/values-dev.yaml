@@ -44,7 +44,7 @@ inventory:
 tax:
   enabled: true
   image:
-    tag: main
+    tag: 2094d996
 search:
   enabled: true
   image:
