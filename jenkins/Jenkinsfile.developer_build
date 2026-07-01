@@ -29,7 +29,6 @@ pipeline {
         string(name: 'BACKOFFICE_BFF_BRANCH', defaultValue: 'main', description: 'Branch for backoffice-bff')
         string(name: 'BACKOFFICE_UI_BRANCH', defaultValue: 'main', description: 'Branch for backoffice-ui')
         string(name: 'SAMPLEDATA_BRANCH', defaultValue: 'main', description: 'Branch for sampledata')
-        string(name: 'SWAGGER_UI_BRANCH', defaultValue: 'main', description: 'Branch for swagger-ui')
 
         booleanParam(name: 'DRY_RUN', defaultValue: true, description: 'Show diff without pushing GitOps commit')
     }
@@ -66,7 +65,7 @@ pipeline {
                     }
 
                     def gitopsTargetBranch = params.TARGET_ENV == 'staging' ? 'staging' : 'main'
-                    withCredentials([string(credentialsId: env.GITOPS_TOKEN_CREDENTIALS_ID, variable: 'GITOPS_TOKEN')]) {
+                    withCredentials([usernamePassword(credentialsId: env.GITOPS_TOKEN_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GITOPS_TOKEN')]) {
                         withEnv(["GITOPS_TARGET_BRANCH=${gitopsTargetBranch}"]) {
                             sh '''
                                 git remote set-url origin https://x-access-token:${GITOPS_TOKEN}@${GITOPS_REPO_URL#https://}

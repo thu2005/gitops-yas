@@ -76,7 +76,6 @@ write_service "storefront-ui"      "STOREFRONT_UI_BRANCH"     "storefront-ui"  "
 write_service "backoffice-bff"     "BACKOFFICE_BFF_BRANCH"    "backoffice-bff" "30004"
 write_service "backoffice-ui"      "BACKOFFICE_UI_BRANCH"     "backoffice-ui"  "30003"
 write_service "sampledata"         "SAMPLEDATA_BRANCH"        "sampledata"     "30013"
-write_service "swagger-ui"         "SWAGGER_UI_BRANCH"        "swagger-ui"     "30014"
 
 echo "Resolved developer build plan:"
 column -t -s $'\t' "$output_file" 2>/dev/null || cat "$output_file"
