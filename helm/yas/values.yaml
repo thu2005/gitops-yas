@@ -279,9 +279,13 @@ search:
     type: NodePort
     port: 80
     nodePort: 30012
+  podAnnotations:
+    proxy.istio.io/config: '{"holdApplicationUntilProxyStarts": true}'
   env:
     ELASTICSEARCH_URL: elasticsearch-es-http.elasticsearch:9200
     ELASTICSEARCH_USERNAME: yas
+    SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka-cluster-kafka-brokers.kafka:9092
+    SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka-cluster-kafka-brokers.kafka:9092
   secrets:
     ELASTICSEARCH_PASSWORD: "LarUmB3A49NTg9YmgW4="
   isBackend: true

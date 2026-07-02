@@ -41,4 +41,30 @@ spec:
             host: product
             port:
               number: 80
+---
+# Mock HEAD request to Elasticsearch to fix Spring Data ES client 9.x compatibility issue with ES 8.x
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: elasticsearch-mock
+  namespace: {{ .Release.Namespace }}
+spec:
+  hosts:
+    - "elasticsearch-es-http.elasticsearch.svc.cluster.local"
+    - "elasticsearch-es-http.elasticsearch"
+  http:
+    - match:
+        - method:
+            exact: HEAD
+      directResponse:
+        status: 200
+      headers:
+        response:
+          set:
+            X-Elastic-Product: "Elasticsearch"
+    - route:
+        - destination:
+            host: elasticsearch-es-http.elasticsearch.svc.cluster.local
+            port:
+              number: 9200
 {{- end }}

@@ -20,6 +20,12 @@ spec:
     metadata:
       labels:
         app: {{ $serviceName }}
+      {{- if $serviceConfig.podAnnotations }}
+      annotations:
+        {{- range $key, $val := $serviceConfig.podAnnotations }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+      {{- end }}
     spec:
       serviceAccountName: {{ $serviceName }}
       {{- if $serviceConfig.isBackend }}

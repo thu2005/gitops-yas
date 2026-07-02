@@ -1,59 +1,138 @@
 global:
   environment: staging
 
+istio:
+  enabled: true  # Istio đã cài trên GKE cluster
+
 storefront-ui:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 3000
+    nodePort: null
+
 storefront-bff:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+  env:
+    SPRING_PROFILES_ACTIVE: "custom"
+    SPRING_APPLICATION_JSON: >-
+      {"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"api","uri":"http://api.yas.local","predicates":["Path=/api/**"],"filters":["TokenRelay=","StripPrefix=1"]},{"id":"nextjs","uri":"http://storefront-ui:3000","predicates":["Path=/**"]}]}}}}}}
+
 backoffice-ui:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 3000
+    nodePort: null
+
 backoffice-bff:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+  env:
+    SPRING_APPLICATION_JSON: >-
+      {"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"api","uri":"http://api.yas.local","predicates":["Path=/api/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"nextjs","uri":"http://backoffice-ui:3000","predicates":["Path=/**"]}]}}}}}}
+
 product:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+
 media:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+
 customer:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+
 cart:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+
 order:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+
 inventory:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+
 tax:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+
 search:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+
 sampledata:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+
 swagger-ui:
   enabled: true
   image:
     tag: v5.17.14
+  service:
+    type: ClusterIP
+    port: 8080
+    nodePort: null
