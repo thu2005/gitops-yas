@@ -9,6 +9,8 @@ storefront-bff:
   enabled: true
   image:
     tag: main
+  env:
+    SPRING_CLOUD_GATEWAY_ROUTES_2_URI: "http://storefront-ui:3000"
 backoffice-ui:
   enabled: true
   image:
@@ -17,6 +19,8 @@ backoffice-bff:
   enabled: true
   image:
     tag: main
+  env:
+    SPRING_CLOUD_GATEWAY_ROUTES_2_URI: "http://backoffice-ui:3000"
 product:
   enabled: true
   image:
