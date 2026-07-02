@@ -23,8 +23,7 @@ storefront-bff:
     nodePort: null
   env:
     SPRING_PROFILES_ACTIVE: "custom"
-    SPRING_APPLICATION_JSON: >-
-      {"spring":{"security":{"oauth2":{"client":{"provider":{"keycloak":{"issuer-uri":"","authorization-uri":"http://identity/realms/Yas/protocol/openid-connect/auth","token-uri":"http://identity/realms/Yas/protocol/openid-connect/token","jwk-set-uri":"http://identity/realms/Yas/protocol/openid-connect/certs","user-info-uri":"http://identity/realms/Yas/protocol/openid-connect/userinfo","user-name-attribute":"preferred_username"}}}}},"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"product_api","uri":"http://product","predicates":["Path=/api/product/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"cart_api","uri":"http://cart","predicates":["Path=/api/cart/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"customer_api","uri":"http://customer","predicates":["Path=/api/customer/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"order_api","uri":"http://order","predicates":["Path=/api/order/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"tax_api","uri":"http://tax","predicates":["Path=/api/tax/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"inventory_api","uri":"http://inventory","predicates":["Path=/api/inventory/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"media_api","uri":"http://media","predicates":["Path=/api/media/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"search_api","uri":"http://search","predicates":["Path=/api/search/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"sampledata_api","uri":"http://sampledata","predicates":["Path=/api/sampledata/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"nextjs","uri":"http://storefront-ui:3000","predicates":["Path=/**"]}]}}}}}}}
+    SPRING_APPLICATION_JSON: '{"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"product_api","uri":"http://product","predicates":["Path=/api/product/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"cart_api","uri":"http://cart","predicates":["Path=/api/cart/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"customer_api","uri":"http://customer","predicates":["Path=/api/customer/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"order_api","uri":"http://order","predicates":["Path=/api/order/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"tax_api","uri":"http://tax","predicates":["Path=/api/tax/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"inventory_api","uri":"http://inventory","predicates":["Path=/api/inventory/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"media_api","uri":"http://media","predicates":["Path=/api/media/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"search_api","uri":"http://search","predicates":["Path=/api/search/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"sampledata_api","uri":"http://sampledata","predicates":["Path=/api/sampledata/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"nextjs","uri":"http://storefront-ui:3000","predicates":["Path=/**"]}]}}}}}}'
 
 backoffice-ui:
   enabled: true
@@ -45,8 +44,7 @@ backoffice-bff:
     nodePort: null
   env:
     SPRING_PROFILES_ACTIVE: "custom"
-    SPRING_APPLICATION_JSON: >-
-      {"spring":{"security":{"oauth2":{"client":{"provider":{"keycloak":{"issuer-uri":"","authorization-uri":"http://identity/realms/Yas/protocol/openid-connect/auth","token-uri":"http://identity/realms/Yas/protocol/openid-connect/token","jwk-set-uri":"http://identity/realms/Yas/protocol/openid-connect/certs","user-info-uri":"http://identity/realms/Yas/protocol/openid-connect/userinfo","user-name-attribute":"preferred_username"}}}}},"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"product_api","uri":"http://product","predicates":["Path=/api/product/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"customer_api","uri":"http://customer","predicates":["Path=/api/customer/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"order_api","uri":"http://order","predicates":["Path=/api/order/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"tax_api","uri":"http://tax","predicates":["Path=/api/tax/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"inventory_api","uri":"http://inventory","predicates":["Path=/api/inventory/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"media_api","uri":"http://media","predicates":["Path=/api/media/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"search_api","uri":"http://search","predicates":["Path=/api/search/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"nextjs","uri":"http://backoffice-ui:3000","predicates":["Path=/**"]}]}}}}}}}
+    SPRING_APPLICATION_JSON: '{"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"product_api","uri":"http://product","predicates":["Path=/api/product/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"customer_api","uri":"http://customer","predicates":["Path=/api/customer/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"order_api","uri":"http://order","predicates":["Path=/api/order/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"tax_api","uri":"http://tax","predicates":["Path=/api/tax/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"inventory_api","uri":"http://inventory","predicates":["Path=/api/inventory/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"media_api","uri":"http://media","predicates":["Path=/api/media/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"search_api","uri":"http://search","predicates":["Path=/api/search/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"sampledata_api","uri":"http://sampledata","predicates":["Path=/api/sampledata/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"nextjs","uri":"http://backoffice-ui:3000","predicates":["Path=/**"]}]}}}}}}'
 
 product:
   enabled: true
@@ -137,3 +135,39 @@ swagger-ui:
     type: ClusterIP
     port: 8080
     nodePort: null
+
+storefrontBffExtraConfig:
+  spring:
+    security:
+      oauth2:
+        client:
+          provider:
+            keycloak:
+              issuer-uri: "http://identity/realms/Yas"
+          registration:
+            keycloak:
+              client-id: storefront-bff
+              client-secret: ${KEYCLOAK_STOREFRONT_BFF_CLIENT_SECRET}
+              scope:
+                - openid
+                - profile
+                - email
+                - roles
+
+backofficeBffExtraConfig:
+  spring:
+    security:
+      oauth2:
+        client:
+          provider:
+            keycloak:
+              issuer-uri: "http://identity/realms/Yas"
+          registration:
+            keycloak:
+              client-id: backoffice-bff
+              client-secret: ${KEYCLOAK_BACKOFFICE_BFF_CLIENT_SECRET}
+              scope:
+                - openid
+                - profile
+                - email
+                - roles
