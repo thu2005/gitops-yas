@@ -10,7 +10,8 @@ storefront-bff:
   image:
     tag: main
   env:
-    SPRING_CLOUD_GATEWAY_ROUTES_2_URI: "http://storefront-ui:3000"
+    SPRING_APPLICATION_JSON: >-
+      {"spring":{"cloud":{"gateway":{"routes":[{"id":"api_servicename_local","uri":"http://api.yas.local","predicates":[{"name":"Path","args":{"pattern":"/api/servicename/**"}}],"filters":[{"name":"TokenRelay"},{"name":"StripPrefix","args":{"parts":1}}]},{"id":"api","uri":"http://api.yas.local","predicates":[{"name":"Path","args":{"pattern":"/api/**"}}],"filters":[{"name":"TokenRelay"},{"name":"StripPrefix","args":{"parts":1}}]},{"id":"nextjs","uri":"http://storefront-ui:3000","predicates":[{"name":"Path","args":{"pattern":"/**"}}]}]}}}}
 backoffice-ui:
   enabled: true
   image:
@@ -20,7 +21,8 @@ backoffice-bff:
   image:
     tag: main
   env:
-    SPRING_CLOUD_GATEWAY_ROUTES_2_URI: "http://backoffice-ui:3000"
+    SPRING_APPLICATION_JSON: >-
+      {"spring":{"cloud":{"gateway":{"routes":[{"id":"api_servicename_local","uri":"http://api.yas.local","predicates":[{"name":"Path","args":{"pattern":"/api/servicename/**"}}],"filters":[{"name":"RewritePath","args":{"regexp":"/api/(?<segment>.*)","replacement":"/$\\{segment}"}},{"name":"TokenRelay"}]},{"id":"api","uri":"http://api.yas.local","predicates":[{"name":"Path","args":{"pattern":"/api/**"}}],"filters":[{"name":"RewritePath","args":{"regexp":"/api/(?<segment>.*)","replacement":"/$\\{segment}"}},{"name":"TokenRelay"}]},{"id":"nextjs","uri":"http://backoffice-ui:3000","predicates":[{"name":"Path","args":{"pattern":"/**"}}]}]}}}}
 product:
   enabled: true
   image:
