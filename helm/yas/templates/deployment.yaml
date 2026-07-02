@@ -28,6 +28,10 @@ spec:
       {{- end }}
     spec:
       serviceAccountName: {{ $serviceName }}
+      {{- if $serviceConfig.hostAliases }}
+      hostAliases:
+        {{- toYaml $serviceConfig.hostAliases | nindent 8 }}
+      {{- end }}
       {{- if $serviceConfig.isBackend }}
       volumes:
         - name: yas-configuration
