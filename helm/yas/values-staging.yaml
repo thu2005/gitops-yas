@@ -21,14 +21,14 @@ storefront-bff:
     type: ClusterIP
     port: 80
     nodePort: null
+  hostAliases:
+    - hostnames:
+        - identity.yas.local
+      ip: 34.118.234.132
   env:
     SPRING_PROFILES_ACTIVE: "custom"
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI: ""
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION_URI: "http://identity/realms/Yas/protocol/openid-connect/auth"
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN_URI: "http://identity/realms/Yas/protocol/openid-connect/token"
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_JWK_SET_URI: "http://identity/realms/Yas/protocol/openid-connect/certs"
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_INFO_URI: "http://identity/realms/Yas/protocol/openid-connect/userinfo"
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_NAME_ATTRIBUTE: "preferred_username"
+    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI: "http://identity.yas.local/realms/Yas"
+    YAS_SERVICES_TOKEN_IDENTITY: "http://identity.yas.local/realms/Yas/protocol/openid-connect/token"
     SPRING_APPLICATION_JSON: '{"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"product_api","uri":"http://product","predicates":["Path=/api/product/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"cart_api","uri":"http://cart","predicates":["Path=/api/cart/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"customer_api","uri":"http://customer","predicates":["Path=/api/customer/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"order_api","uri":"http://order","predicates":["Path=/api/order/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"tax_api","uri":"http://tax","predicates":["Path=/api/tax/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"inventory_api","uri":"http://inventory","predicates":["Path=/api/inventory/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"media_api","uri":"http://media","predicates":["Path=/api/media/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"search_api","uri":"http://search","predicates":["Path=/api/search/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"sampledata_api","uri":"http://sampledata","predicates":["Path=/api/sampledata/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"nextjs","uri":"http://storefront-ui:3000","predicates":["Path=/**"]}]}}}}}}'
 
 backoffice-ui:
@@ -48,14 +48,14 @@ backoffice-bff:
     type: ClusterIP
     port: 80
     nodePort: null
+  hostAliases:
+    - hostnames:
+        - identity.yas.local
+      ip: 34.118.234.132
   env:
     SPRING_PROFILES_ACTIVE: "custom"
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI: ""
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION_URI: "http://identity/realms/Yas/protocol/openid-connect/auth"
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN_URI: "http://identity/realms/Yas/protocol/openid-connect/token"
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_JWK_SET_URI: "http://identity/realms/Yas/protocol/openid-connect/certs"
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_INFO_URI: "http://identity/realms/Yas/protocol/openid-connect/userinfo"
-    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER_NAME_ATTRIBUTE: "preferred_username"
+    SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI: "http://identity.yas.local/realms/Yas"
+    YAS_SERVICES_TOKEN_IDENTITY: "http://identity.yas.local/realms/Yas/protocol/openid-connect/token"
     SPRING_APPLICATION_JSON: '{"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"product_api","uri":"http://product","predicates":["Path=/api/product/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"customer_api","uri":"http://customer","predicates":["Path=/api/customer/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"order_api","uri":"http://order","predicates":["Path=/api/order/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"tax_api","uri":"http://tax","predicates":["Path=/api/tax/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"inventory_api","uri":"http://inventory","predicates":["Path=/api/inventory/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"media_api","uri":"http://media","predicates":["Path=/api/media/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"search_api","uri":"http://search","predicates":["Path=/api/search/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"sampledata_api","uri":"http://sampledata","predicates":["Path=/api/sampledata/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"nextjs","uri":"http://backoffice-ui:3000","predicates":["Path=/**"]}]}}}}}}'
 
 product:
