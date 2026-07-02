@@ -207,11 +207,11 @@ spec:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/order"
 ---
-# Allow storefront-bff and backoffice-bff to call media.
+# Allow storefront-bff, backoffice-bff, and product to call media.
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: allow-bffs-to-media
+  name: allow-to-media
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
@@ -224,6 +224,7 @@ spec:
             principals:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/product"
 ---
 # Allow storefront-bff to call sampledata.
 apiVersion: security.istio.io/v1beta1
@@ -242,6 +243,25 @@ spec:
             principals:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
 ---
+# Allow storefront-bff, backoffice-bff, and product to call rating.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-to-rating
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: rating
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/product"
+---
 # Allow Kubernetes probes and Argo CD health checks.
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -258,57 +278,7 @@ spec:
               - "/health"
               - "/"
 ---
-# Allow Istio ingressgateway to reach storefront-ui.
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-ingressgateway-to-storefront-ui
-  namespace: {{ .Release.Namespace }}
-spec:
-  selector:
-    matchLabels:
-      app: storefront-ui
-  action: ALLOW
-  rules:
-    - from:
-        - source:
-            principals:
-              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
----
-# Allow Istio ingressgateway to reach backoffice-ui.
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-ingressgateway-to-backoffice-ui
-  namespace: {{ .Release.Namespace }}
-spec:
-  selector:
-    matchLabels:
-      app: backoffice-ui
-  action: ALLOW
-  rules:
-    - from:
-        - source:
-            principals:
-              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
----
-# Allow Istio ingressgateway to reach swagger-ui.
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-ingressgateway-to-swagger-ui
-  namespace: {{ .Release.Namespace }}
-spec:
-  selector:
-    matchLabels:
-      app: swagger-ui
-  action: ALLOW
-  rules:
-    - from:
-        - source:
-            principals:
-              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
----
+
 # Default deny-all. Explicit ALLOW policies above define the permitted service graph.
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
