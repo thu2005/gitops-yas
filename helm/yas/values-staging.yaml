@@ -143,7 +143,12 @@ storefrontBffExtraConfig:
         client:
           provider:
             keycloak:
-              issuer-uri: "http://identity/realms/Yas"
+              issuer-uri: ""
+              authorization-uri: "http://identity/realms/Yas/protocol/openid-connect/auth"
+              token-uri: "http://identity/realms/Yas/protocol/openid-connect/token"
+              jwk-set-uri: "http://identity/realms/Yas/protocol/openid-connect/certs"
+              user-info-uri: "http://identity/realms/Yas/protocol/openid-connect/userinfo"
+              user-name-attribute: "preferred_username"
           registration:
             keycloak:
               client-id: storefront-bff
@@ -161,7 +166,12 @@ backofficeBffExtraConfig:
         client:
           provider:
             keycloak:
-              issuer-uri: "http://identity/realms/Yas"
+              issuer-uri: ""
+              authorization-uri: "http://identity/realms/Yas/protocol/openid-connect/auth"
+              token-uri: "http://identity/realms/Yas/protocol/openid-connect/token"
+              jwk-set-uri: "http://identity/realms/Yas/protocol/openid-connect/certs"
+              user-info-uri: "http://identity/realms/Yas/protocol/openid-connect/userinfo"
+              user-name-attribute: "preferred_username"
           registration:
             keycloak:
               client-id: backoffice-bff
