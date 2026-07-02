@@ -74,8 +74,53 @@ logbackConfig: |
   </configuration>
 
 gatewayRoutesConfig: {}
-backofficeBffExtraConfig: {}
-storefrontBffExtraConfig: {}
+backofficeBffExtraConfig:
+  spring:
+    security:
+      oauth2:
+        client:
+          provider:
+            keycloak:
+              issuer-uri: http://identity.yas.local.com/realms/Yas
+              authorization-uri: http://identity.yas.local.com/realms/Yas/protocol/openid-connect/auth
+              token-uri: http://identity/realms/Yas/protocol/openid-connect/token
+              jwk-set-uri: http://identity/realms/Yas/protocol/openid-connect/certs
+              user-info-uri: http://identity/realms/Yas/protocol/openid-connect/userinfo
+    cloud:
+      gateway:
+        routes:
+          - id: api
+            uri: http://localhost:80
+            predicates:
+              - Path=/invalid_path_to_disable_api_yas_local/**
+          - id: nextjs
+            uri: http://backoffice-ui:3000
+            predicates:
+              - Path=/**
+
+storefrontBffExtraConfig:
+  spring:
+    security:
+      oauth2:
+        client:
+          provider:
+            keycloak:
+              issuer-uri: http://identity.yas.local.com/realms/Yas
+              authorization-uri: http://identity.yas.local.com/realms/Yas/protocol/openid-connect/auth
+              token-uri: http://identity/realms/Yas/protocol/openid-connect/token
+              jwk-set-uri: http://identity/realms/Yas/protocol/openid-connect/certs
+              user-info-uri: http://identity/realms/Yas/protocol/openid-connect/userinfo
+    cloud:
+      gateway:
+        routes:
+          - id: api
+            uri: http://localhost:80
+            predicates:
+              - Path=/invalid_path_to_disable_api_yas_local/**
+          - id: nextjs
+            uri: http://storefront-ui:3000
+            predicates:
+              - Path=/**
 mediaApplicationConfig: {}
 customerApplicationConfig: {}
 searchApplicationConfig: {}
@@ -322,3 +367,4 @@ swagger-ui:
     nodePort: 30014
   env: {}
   secrets: {}
+
