@@ -1,0 +1,150 @@
+{{- if .Values.istio.enabled }}
+---
+# Allow storefront-bff and backoffice-bff to call product.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-bffs-to-product
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: product
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+---
+# Allow storefront-bff to call cart.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-storefront-bff-to-cart
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: cart
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
+---
+# Allow storefront-bff and backoffice-bff to call customer.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-bffs-to-customer
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: customer
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+---
+# Allow order, storefront-bff, and backoffice-bff to call tax.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-to-tax
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: tax
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/order"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+---
+# Allow storefront-bff to call search.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-storefront-bff-to-search
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: search
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
+---
+# Allow backoffice-bff to call order.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-backoffice-bff-to-order
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: order
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+---
+# Allow backoffice-bff and order to call inventory.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-to-inventory
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: inventory
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/order"
+---
+# Allow Kubernetes probes and Argo CD health checks.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-health-check
+  namespace: {{ .Release.Namespace }}
+spec:
+  action: ALLOW
+  rules:
+    - to:
+        - operation:
+            paths:
+              - "/actuator/health"
+              - "/health"
+              - "/"
+---
+# Default deny-all. Explicit ALLOW policies above define the permitted service graph.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: deny-all
+  namespace: {{ .Release.Namespace }}
+spec: {}
+{{- end }}

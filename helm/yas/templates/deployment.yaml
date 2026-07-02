@@ -21,6 +21,7 @@ spec:
       labels:
         app: {{ $serviceName }}
     spec:
+      serviceAccountName: {{ $serviceName }}
       {{- if $serviceConfig.isBackend }}
       volumes:
         - name: yas-configuration
