@@ -108,13 +108,13 @@ spec:
     - yas-gateway
   hosts:
     - identity
-    - identity.yas.local.com
+    - identity.yas.local
   http:
     - match:
         - authority:
             exact: identity
         - authority:
-            exact: identity.yas.local.com
+            exact: identity.yas.local
         - uri:
             prefix: /
       route:
