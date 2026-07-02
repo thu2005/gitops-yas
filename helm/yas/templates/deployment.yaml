@@ -1,6 +1,7 @@
 {{- range $serviceName, $serviceConfig := .Values }}
 {{- if typeIs "map[string]interface {}" $serviceConfig }}
 {{- if hasKey $serviceConfig "enabled" }}
+{{- if hasKey $serviceConfig "image" }}
 {{- if eq $serviceConfig.enabled true }}
 ---
 apiVersion: apps/v1
@@ -65,6 +66,7 @@ spec:
             - name: SPRING_CONFIG_ADDITIONAL_LOCATION
               value: /opt/yas/config/application.yaml
           {{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
