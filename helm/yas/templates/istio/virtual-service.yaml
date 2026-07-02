@@ -109,7 +109,6 @@ spec:
   hosts:
     - identity
     - identity.yas.local.com
-    - "*"
   http:
     - match:
         - authority:
