@@ -2,7 +2,7 @@ global:
   environment: dev
 
 istio:
-  enabled: true  # Istio đã cài trên GKE cluster yas-dev
+  enabled: true  # Istio da cai tren GKE cluster yas-dev
 
 storefront-ui:
   enabled: true
@@ -15,7 +15,7 @@ storefront-bff:
   env:
     SPRING_PROFILES_ACTIVE: "custom"
     SPRING_APPLICATION_JSON: >-
-      {"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"api","uri":"http://api.yas.local","predicates":["Path=/api/**"],"filters":["TokenRelay=","StripPrefix=1"]},{"id":"nextjs","uri":"http://storefront-ui:3000","predicates":["Path=/**"]}]}}}}}}
+      {"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"product_api","uri":"http://product","predicates":["Path=/api/product/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"cart_api","uri":"http://cart","predicates":["Path=/api/cart/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"customer_api","uri":"http://customer","predicates":["Path=/api/customer/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"order_api","uri":"http://order","predicates":["Path=/api/order/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"tax_api","uri":"http://tax","predicates":["Path=/api/tax/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"inventory_api","uri":"http://inventory","predicates":["Path=/api/inventory/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"media_api","uri":"http://media","predicates":["Path=/api/media/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"search_api","uri":"http://search","predicates":["Path=/api/search/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"sampledata_api","uri":"http://sampledata","predicates":["Path=/api/sampledata/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"nextjs","uri":"http://storefront-ui:3000","predicates":["Path=/**"]}]}}}}}}
 backoffice-ui:
   enabled: true
   image:
@@ -25,8 +25,9 @@ backoffice-bff:
   image:
     tag: main
   env:
+    SPRING_PROFILES_ACTIVE: "custom"
     SPRING_APPLICATION_JSON: >-
-      {"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"api","uri":"http://api.yas.local","predicates":["Path=/api/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"nextjs","uri":"http://backoffice-ui:3000","predicates":["Path=/**"]}]}}}}}}
+      {"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"product_api","uri":"http://product","predicates":["Path=/api/product/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"customer_api","uri":"http://customer","predicates":["Path=/api/customer/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"order_api","uri":"http://order","predicates":["Path=/api/order/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"tax_api","uri":"http://tax","predicates":["Path=/api/tax/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"inventory_api","uri":"http://inventory","predicates":["Path=/api/inventory/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"media_api","uri":"http://media","predicates":["Path=/api/media/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"search_api","uri":"http://search","predicates":["Path=/api/search/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"nextjs","uri":"http://backoffice-ui:3000","predicates":["Path=/**"]}]}}}}}}
 product:
   enabled: true
   image:

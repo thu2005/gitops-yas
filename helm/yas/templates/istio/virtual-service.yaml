@@ -1,5 +1,105 @@
 {{- if .Values.istio.enabled }}
 ---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: yas-gateway
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - storefront.yas.local
+        - backoffice.yas.local
+        - swagger.yas.local
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: yas-web
+  namespace: {{ .Release.Namespace }}
+spec:
+  hosts:
+    - storefront.yas.local
+    - backoffice.yas.local
+    - swagger.yas.local
+  gateways:
+    - yas-gateway
+  http:
+    - match:
+        - authority:
+            exact: storefront.yas.local
+          uri:
+            prefix: /api
+        - authority:
+            exact: storefront.yas.local
+          uri:
+            prefix: /oauth2
+        - authority:
+            exact: storefront.yas.local
+          uri:
+            prefix: /login
+        - authority:
+            exact: storefront.yas.local
+          uri:
+            prefix: /logout
+      route:
+        - destination:
+            host: storefront-bff.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: storefront.yas.local
+      route:
+        - destination:
+            host: storefront-ui.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 3000
+    - match:
+        - authority:
+            exact: backoffice.yas.local
+          uri:
+            prefix: /api
+        - authority:
+            exact: backoffice.yas.local
+          uri:
+            prefix: /oauth2
+        - authority:
+            exact: backoffice.yas.local
+          uri:
+            prefix: /login
+        - authority:
+            exact: backoffice.yas.local
+          uri:
+            prefix: /logout
+      route:
+        - destination:
+            host: backoffice-bff.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: backoffice.yas.local
+      route:
+        - destination:
+            host: backoffice-ui.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 3000
+    - match:
+        - authority:
+            exact: swagger.yas.local
+      route:
+        - destination:
+            host: swagger-ui.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 8080
+---
 # Retry policy for tax service.
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService

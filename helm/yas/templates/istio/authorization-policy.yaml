@@ -1,5 +1,86 @@
 {{- if .Values.istio.enabled }}
 ---
+# Allow Istio ingressgateway to call public BFF and UI workloads.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingressgateway-to-storefront-bff
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: storefront-bff
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingressgateway-to-backoffice-bff
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: backoffice-bff
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingressgateway-to-storefront-ui
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: storefront-ui
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingressgateway-to-backoffice-ui
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: backoffice-ui
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingressgateway-to-swagger-ui
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: swagger-ui
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
+---
 # Allow storefront-bff and backoffice-bff to call product.
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -53,6 +134,24 @@ spec:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
 ---
+# Allow storefront-bff and backoffice-bff to call order.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-bffs-to-order
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: order
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+---
 # Allow order, storefront-bff, and backoffice-bff to call tax.
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -89,23 +188,6 @@ spec:
             principals:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
 ---
-# Allow backoffice-bff to call order.
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-backoffice-bff-to-order
-  namespace: {{ .Release.Namespace }}
-spec:
-  selector:
-    matchLabels:
-      app: order
-  action: ALLOW
-  rules:
-    - from:
-        - source:
-            principals:
-              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
----
 # Allow backoffice-bff and order to call inventory.
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -122,7 +204,43 @@ spec:
         - source:
             principals:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/order"
+---
+# Allow storefront-bff and backoffice-bff to call media.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-bffs-to-media
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: media
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+---
+# Allow storefront-bff to call sampledata.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-storefront-bff-to-sampledata
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: sampledata
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
 ---
 # Allow Kubernetes probes and Argo CD health checks.
 apiVersion: security.istio.io/v1beta1
