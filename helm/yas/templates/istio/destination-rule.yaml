@@ -1,0 +1,74 @@
+{{- if .Values.istio.enabled }}
+---
+# Enforce mTLS cho traffic nội bộ yas-dev
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: mtls-all-yas-dev
+  namespace: {{ .Release.Namespace }}
+spec:
+  host: "*.{{ .Release.Namespace }}.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---
+# Ngoại lệ: Keycloak (keycloak-service.keycloak.svc.cluster.local)
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: keycloak-no-tls
+  namespace: {{ .Release.Namespace }}
+spec:
+  host: "keycloak-service.keycloak.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---
+# Ngoại lệ: Kafka (kafka-cluster-kafka-brokers.kafka.svc.cluster.local)
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: kafka-no-tls
+  namespace: {{ .Release.Namespace }}
+spec:
+  host: "*.kafka.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---
+# Ngoại lệ: Elasticsearch (elasticsearch-es-http.elasticsearch.svc.cluster.local)
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: elasticsearch-no-tls
+  namespace: {{ .Release.Namespace }}
+spec:
+  host: "*.elasticsearch.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---
+# Ngoại lệ: PostgreSQL (postgresql.postgres.svc.cluster.local)
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: postgres-no-tls
+  namespace: {{ .Release.Namespace }}
+spec:
+  host: "*.postgres.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---
+# Ngoại lệ: Redis (redis-master.redis.svc.cluster.local)
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: redis-no-tls
+  namespace: {{ .Release.Namespace }}
+spec:
+  host: "*.redis.svc.cluster.local"
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+{{- end }}

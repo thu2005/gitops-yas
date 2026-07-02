@@ -1,6 +1,9 @@
 global:
   environment: dev
 
+istio:
+  enabled: false  # Bật cho env đã cài Istio (e.g. dev)
+
 credentials:
   postgresql:
     username: yasadminuser

@@ -1,6 +1,9 @@
 global:
   environment: dev
 
+istio:
+  enabled: true  # Istio đã cài trên GKE cluster yas-dev
+
 storefront-ui:
   enabled: true
   image:
