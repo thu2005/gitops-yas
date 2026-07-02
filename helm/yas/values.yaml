@@ -286,6 +286,7 @@ search:
     ELASTICSEARCH_USERNAME: yas
     SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka-cluster-kafka-brokers.kafka:9092
     SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka-cluster-kafka-brokers.kafka:9092
+    SPRING_PROFILES_ACTIVE: default
   secrets:
     ELASTICSEARCH_PASSWORD: "LarUmB3A49NTg9YmgW4="
   isBackend: true

@@ -14,9 +14,7 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - storefront.yas.local
-        - backoffice.yas.local
-        - swagger.yas.local
+        - "*"
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
@@ -100,6 +98,32 @@ spec:
             port:
               number: 8080
 ---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: identity-web
+  namespace: {{ .Release.Namespace }}
+spec:
+  gateways:
+    - yas-gateway
+  hosts:
+    - identity
+    - identity.yas.local.com
+    - "*"
+  http:
+    - match:
+        - authority:
+            exact: identity
+        - authority:
+            exact: identity.yas.local.com
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: keycloak-service.keycloak.svc.cluster.local
+            port:
+              number: 80
+---
 # Retry policy for tax service.
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -152,19 +176,30 @@ spec:
   hosts:
     - "elasticsearch-es-http.elasticsearch.svc.cluster.local"
     - "elasticsearch-es-http.elasticsearch"
+    - "elasticsearch"
   http:
     - match:
         - method:
-            exact: HEAD
-      directResponse:
-        status: 200
+            regex: "^(HEAD|GET)$"
+      route:
+        - destination:
+            host: elasticsearch-es-http.elasticsearch.svc.cluster.local
+            port:
+              number: 9200
       headers:
-        response:
+        request:
           set:
-            X-Elastic-Product: "Elasticsearch"
+            Accept: "application/json"
+          remove:
+            - Content-Type
     - route:
         - destination:
             host: elasticsearch-es-http.elasticsearch.svc.cluster.local
             port:
               number: 9200
+      headers:
+        request:
+          set:
+            Accept: "application/json"
+            Content-Type: "application/json"
 {{- end }}

@@ -1,0 +1,43 @@
+{{- if .Values.istio.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: elasticsearch-header-fix
+  namespace: {{ .Release.Namespace }}
+spec:
+  workloadSelector:
+    labels:
+      app: search
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: SIDECAR_OUTBOUND
+      listener:
+        filterChain:
+          filter:
+            name: "envoy.filters.network.http_connection_manager"
+            subFilter:
+              name: "envoy.filters.http.router"
+    patch:
+      operation: INSERT_BEFORE
+      value:
+        name: envoy.lua
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+          inlineCode: |
+            function envoy_on_request(request_handle)
+              local method = request_handle:headers():get(":method")
+              request_handle:headers():replace("Accept", "application/json")
+              request_handle:headers():replace("accept", "application/json")
+              
+              if method == "HEAD" or method == "GET" then
+                request_handle:headers():remove("Content-Type")
+                request_handle:headers():remove("content-type")
+              else
+                if request_handle:headers():get("Content-Type") or request_handle:headers():get("content-type") then
+                  request_handle:headers():replace("Content-Type", "application/json")
+                  request_handle:headers():replace("content-type", "application/json")
+                end
+              end
+            end
+{{- end }}
