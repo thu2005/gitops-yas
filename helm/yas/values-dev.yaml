@@ -8,6 +8,8 @@ storefront-ui:
   enabled: true
   image:
     tag: main
+  env:
+    API_BASE_PATH: "http://storefront-bff/api"
 storefront-bff:
   enabled: true
   image:
@@ -20,6 +22,8 @@ backoffice-ui:
   enabled: true
   image:
     tag: main
+  env:
+    API_BASE_PATH: "http://backoffice-bff/api"
 backoffice-bff:
   enabled: true
   image:
@@ -36,6 +40,8 @@ media:
   enabled: true
   image:
     tag: main
+  env:
+    YAS_PUBLICURL: "/api/media"
 customer:
   enabled: true
   image:
