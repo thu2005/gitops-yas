@@ -265,6 +265,7 @@ spec:
         - operation:
             paths:
               - "/actuator/health"
+              - "/actuator/prometheus"
               - "/health"
               - "/"
 ---
