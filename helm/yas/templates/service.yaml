@@ -16,12 +16,19 @@ spec:
   selector:
     app: {{ $serviceName }}
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: {{ $serviceConfig.service.port }}
       targetPort: {{ $serviceConfig.service.port }}
       {{- if $serviceConfig.service.nodePort }}
       nodePort: {{ $serviceConfig.service.nodePort }}
       {{- end }}
+    {{- if $serviceConfig.isBackend }}
+    - name: metrics
+      protocol: TCP
+      port: 8090
+      targetPort: 8090
+    {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

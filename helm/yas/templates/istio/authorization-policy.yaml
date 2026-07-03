@@ -251,25 +251,7 @@ spec:
             principals:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
 ---
-# Allow storefront-bff, backoffice-bff, and product to call rating.
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-to-rating
-  namespace: {{ .Release.Namespace }}
-spec:
-  selector:
-    matchLabels:
-      app: rating
-  action: ALLOW
-  rules:
-    - from:
-        - source:
-            principals:
-              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
-              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
-              - "cluster.local/ns/{{ .Release.Namespace }}/sa/product"
----
+
 # Allow Kubernetes probes and Argo CD health checks.
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
