@@ -100,6 +100,8 @@ spec:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/cart"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/order"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/search"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/inventory"
 ---
 # Allow storefront-bff to call cart.
 apiVersion: security.istio.io/v1beta1
@@ -191,6 +193,7 @@ spec:
         - source:
             principals:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
 ---
 # Allow backoffice-bff and order to call inventory.
 apiVersion: security.istio.io/v1beta1
@@ -229,6 +232,7 @@ spec:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/product"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/cart"
 ---
 # Allow storefront-bff to call sampledata.
 apiVersion: security.istio.io/v1beta1
