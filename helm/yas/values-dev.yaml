@@ -42,6 +42,7 @@ media:
     tag: main
   env:
     YAS_PUBLICURL: "/api/media"
+    SERVER_SERVLET_CONTEXT_PATH: "/media"
 customer:
   enabled: true
   image:

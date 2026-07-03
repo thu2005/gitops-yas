@@ -107,16 +107,11 @@ spec:
   gateways:
     - yas-gateway
   hosts:
-    - identity
     - identity.yas.local
   http:
     - match:
         - authority:
-            exact: identity
-        - authority:
             exact: identity.yas.local
-        - uri:
-            prefix: /
       route:
         - destination:
             host: keycloak-service.keycloak.svc.cluster.local

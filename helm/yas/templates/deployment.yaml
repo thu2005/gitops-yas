@@ -38,6 +38,9 @@ spec:
           configMap:
             name: yas-configuration-configmap
       {{- end }}
+      {{- if $serviceConfig.extraVolumes }}
+        {{- toYaml $serviceConfig.extraVolumes | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ $serviceName }}
           image: "{{ $serviceConfig.image.repository }}:{{ $serviceConfig.image.tag }}"
@@ -50,6 +53,12 @@ spec:
           volumeMounts:
             - mountPath: /opt/yas/config
               name: yas-configuration
+          {{- end }}
+          {{- if $serviceConfig.extraVolumeMounts }}
+            {{- if not $serviceConfig.isBackend }}
+          volumeMounts:
+            {{- end }}
+            {{- toYaml $serviceConfig.extraVolumeMounts | nindent 12 }}
           {{- end }}
           resources:
             {{- toYaml $serviceConfig.resources | nindent 12 }}
