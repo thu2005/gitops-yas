@@ -98,6 +98,7 @@ spec:
             principals:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/cart"
 ---
 # Allow storefront-bff to call cart.
 apiVersion: security.istio.io/v1beta1
