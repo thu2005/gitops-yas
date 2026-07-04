@@ -32,7 +32,7 @@ storefront-bff:
     SPRING_PROFILES_ACTIVE: "custom"
     SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI: "http://identity.yas.local/realms/Yas"
     YAS_SERVICES_TOKEN_IDENTITY: "http://identity.yas.local/realms/Yas/protocol/openid-connect/token"
-    SPRING_APPLICATION_JSON: '{"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"product_api","uri":"http://product","predicates":["Path=/api/product/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"cart_api","uri":"http://cart","predicates":["Path=/api/cart/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"customer_api","uri":"http://customer","predicates":["Path=/api/customer/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"order_api","uri":"http://order","predicates":["Path=/api/order/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"tax_api","uri":"http://tax","predicates":["Path=/api/tax/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"inventory_api","uri":"http://inventory","predicates":["Path=/api/inventory/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"media_api","uri":"http://media","predicates":["Path=/api/media/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"location_api","uri":"http://location","predicates":["Path=/api/location/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"search_api","uri":"http://search","predicates":["Path=/api/search/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"sampledata_api","uri":"http://sampledata","predicates":["Path=/api/sampledata/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"nextjs","uri":"http://storefront-ui:3000","predicates":["Path=/**"]}]}}}}}}'
+    SPRING_APPLICATION_JSON: '{"spring":{"cloud":{"gateway":{"server":{"webflux":{"default-filters":["SaveSession"],"routes":[{"id":"product_api","uri":"http://product","predicates":["Path=/api/product/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"cart_api","uri":"http://cart","predicates":["Path=/api/cart/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"customer_api","uri":"http://customer","predicates":["Path=/api/customer/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"order_api","uri":"http://order","predicates":["Path=/api/order/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"tax_api","uri":"http://tax","predicates":["Path=/api/tax/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"inventory_api","uri":"http://inventory","predicates":["Path=/api/inventory/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"media_api","uri":"http://media","predicates":["Path=/api/media/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"location_api","uri":"http://location","predicates":["Path=/api/location/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"payment_api","uri":"http://payment","predicates":["Path=/api/payment/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}","TokenRelay="]},{"id":"search_api","uri":"http://search","predicates":["Path=/api/search/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"sampledata_api","uri":"http://sampledata","predicates":["Path=/api/sampledata/**"],"filters":["RewritePath=/api/(?<segment>.*), /${segment}"]},{"id":"nextjs","uri":"http://storefront-ui:3000","predicates":["Path=/**"]}]}}}}}}'
 
 backoffice-ui:
   enabled: true
@@ -131,6 +131,19 @@ order:
     nodePort: null
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+
+payment:
+  enabled: true
+  image:
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 80
+    nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
+  env:
+    YAS_PUBLIC_URL: "http://storefront.yas.local/complete-payment"
 
 inventory:
   enabled: true

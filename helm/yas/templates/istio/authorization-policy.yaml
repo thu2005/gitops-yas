@@ -157,6 +157,24 @@ spec:
             principals:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/payment"
+---
+# Allow storefront-bff to call payment during checkout.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-storefront-bff-to-payment
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: payment
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
 ---
 # Allow order, storefront-bff, and backoffice-bff to call tax.
 apiVersion: security.istio.io/v1beta1
@@ -233,6 +251,7 @@ spec:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/product"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/cart"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/payment"
 ---
 # Allow BFFs and customer service to call location for checkout addresses.
 apiVersion: security.istio.io/v1beta1

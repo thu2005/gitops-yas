@@ -63,6 +63,7 @@ applicationConfig:
       media: http://media/media
       location: http://location/location
       order: http://order/order
+      payment: http://payment/payment
       product: http://product/product
       search: http://search/search
       tax: http://tax/tax
@@ -281,6 +282,20 @@ order:
     type: NodePort
     port: 80
     nodePort: 30009
+  env: {}
+  secrets: {}
+  isBackend: true
+
+payment:
+  enabled: false
+  image:
+    repository: ghcr.io/nashtech-garage/yas-payment
+    tag: latest
+  resources: *backendResources
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30016
   env: {}
   secrets: {}
   isBackend: true
