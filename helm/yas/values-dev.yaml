@@ -43,6 +43,8 @@ media:
   enabled: true
   image:
     tag: main
+  podAnnotations:
+    rollout.yas.dev/issuer-fix: "1"
   env:
     YAS_PUBLICURL: "/api/media"
     SERVER_SERVLET_CONTEXT_PATH: "/media"
@@ -50,22 +52,32 @@ customer:
   enabled: true
   image:
     tag: main
+  podAnnotations:
+    rollout.yas.dev/issuer-fix: "1"
 location:
   enabled: true
   image:
     tag: latest
+  podAnnotations:
+    rollout.yas.dev/issuer-fix: "1"
 cart:
   enabled: true
   image:
     tag: main
+  podAnnotations:
+    rollout.yas.dev/issuer-fix: "1"
 order:
   enabled: true
   image:
     tag: 6fb564e1
+  podAnnotations:
+    rollout.yas.dev/issuer-fix: "1"
 payment:
   enabled: true
   image:
     tag: 6fb564e1-payment
+  podAnnotations:
+    rollout.yas.dev/issuer-fix: "1"
   env:
     YAS_PUBLIC_URL: "http://storefront.yas.local/complete-payment"
 inventory:
