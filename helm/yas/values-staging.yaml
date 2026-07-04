@@ -22,6 +22,8 @@ storefront-bff:
     type: ClusterIP
     port: 80
     nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
   hostAliases:
     - hostnames:
         - identity.yas.local
@@ -49,6 +51,8 @@ backoffice-bff:
     type: ClusterIP
     port: 80
     nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
   hostAliases:
     - hostnames:
         - identity.yas.local
@@ -67,6 +71,8 @@ product:
     type: ClusterIP
     port: 80
     nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
 
 media:
   enabled: true
@@ -76,6 +82,8 @@ media:
     type: ClusterIP
     port: 80
     nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
   env:
     YAS_PUBLICURL: "/api/media"
     SERVER_SERVLET_CONTEXT_PATH: "/media"
@@ -88,6 +96,8 @@ customer:
     type: ClusterIP
     port: 80
     nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
 
 cart:
   enabled: true
@@ -97,6 +107,8 @@ cart:
     type: ClusterIP
     port: 80
     nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
 
 order:
   enabled: true
@@ -106,6 +118,8 @@ order:
     type: ClusterIP
     port: 80
     nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
 
 inventory:
   enabled: true
@@ -115,6 +129,8 @@ inventory:
     type: ClusterIP
     port: 80
     nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
 
 tax:
   enabled: true
@@ -124,6 +140,8 @@ tax:
     type: ClusterIP
     port: 80
     nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
 
 search:
   enabled: true
@@ -133,6 +151,8 @@ search:
     type: ClusterIP
     port: 80
     nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
 
 sampledata:
   enabled: true
@@ -142,6 +162,8 @@ sampledata:
     type: ClusterIP
     port: 80
     nodePort: null
+  podAnnotations:
+    instrumentation.opentelemetry.io/inject-java: "true"
   env:
     SPRING_DATASOURCE_PRODUCT_URL: "jdbc:postgresql://postgresql.postgres:5432/product"
     SPRING_DATASOURCE_MEDIA_URL: "jdbc:postgresql://postgresql.postgres:5432/media"
