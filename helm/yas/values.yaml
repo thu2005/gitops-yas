@@ -204,6 +204,13 @@ media:
   env: {}
   secrets: {}
   isBackend: true
+  extraVolumes:
+    - name: media-storage
+      persistentVolumeClaim:
+        claimName: media-pvc
+  extraVolumeMounts:
+    - name: media-storage
+      mountPath: /images
 
 customer:
   enabled: false
