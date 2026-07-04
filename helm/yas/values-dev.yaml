@@ -69,7 +69,7 @@ cart:
 order:
   enabled: true
   image:
-    tag: 6fb564e1-order-customer-varchar
+    tag: main
   podAnnotations:
     rollout.yas.dev/issuer-fix: "1"
 payment:
@@ -87,7 +87,7 @@ inventory:
 tax:
   enabled: true
   image:
-    tag: main
+    tag: 0cda603f
 search:
   enabled: true
   image:
