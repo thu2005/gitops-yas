@@ -252,7 +252,7 @@ location:
   service:
     type: NodePort
     port: 80
-    nodePort: 30014
+    nodePort: 30015
   env: {}
   secrets: {}
   isBackend: true
