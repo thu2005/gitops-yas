@@ -218,11 +218,11 @@ media:
         - sh
         - -c
         - |
-          if [ ! -d /images-mount/sample ]; then
+          if [ -d /images ] && [ ! -d /images-mount/sample ]; then
             echo "Copying baseline images..."
             cp -r /images/. /images-mount/
           else
-            echo "Baseline images already exist."
+            echo "Baseline images already exist or /images folder is not present in this docker image."
           fi
       volumeMounts:
         - name: media-storage
