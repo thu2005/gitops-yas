@@ -69,7 +69,7 @@ cart:
 order:
   enabled: true
   image:
-    tag: main
+    tag: 6fb564e1-order-customer-varchar
   podAnnotations:
     rollout.yas.dev/issuer-fix: "1"
 payment:
