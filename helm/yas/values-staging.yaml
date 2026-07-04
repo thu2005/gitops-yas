@@ -126,7 +126,7 @@ cart:
 order:
   enabled: true
   image:
-    tag: main
+    tag: 6fb564e1-order-customer-varchar
   service:
     type: ClusterIP
     port: 80
