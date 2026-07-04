@@ -64,7 +64,7 @@ order:
 payment:
   enabled: true
   image:
-    tag: latest
+    tag: 6fb564e1-payment
   env:
     YAS_PUBLIC_URL: "http://storefront.yas.local/complete-payment"
 inventory:

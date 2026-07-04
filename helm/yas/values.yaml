@@ -289,8 +289,8 @@ order:
 payment:
   enabled: false
   image:
-    repository: ghcr.io/nashtech-garage/yas-payment
-    tag: latest
+    repository: thu2005/yas-payment
+    tag: main
   resources: *backendResources
   service:
     type: NodePort
