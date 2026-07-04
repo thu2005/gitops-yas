@@ -1,0 +1,25 @@
+{{- range $serviceName, $serviceConfig := .Values }}
+{{- if typeIs "map[string]interface {}" $serviceConfig }}
+{{- if hasKey $serviceConfig "enabled" }}
+{{- if eq $serviceConfig.enabled true }}
+{{- if $serviceConfig.isBackend }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $serviceName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: {{ $serviceName }}
+  endpoints:
+    - port: metrics
+      path: /actuator/prometheus
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

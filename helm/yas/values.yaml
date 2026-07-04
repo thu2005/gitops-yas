@@ -25,6 +25,9 @@ applicationConfig:
     shutdown: graceful
     port: 80
   management:
+    otlp:
+      tracing:
+        endpoint: http://opentelemetry-collector.observability:4318/v1/traces
     server:
       port: 8090
     health:
@@ -32,6 +35,9 @@ applicationConfig:
         enabled: true
       livenessstate:
         enabled: true
+    tracing:
+      sampling:
+        probability: 1.0
     endpoints:
       web:
         exposure:
@@ -198,6 +204,29 @@ media:
   env: {}
   secrets: {}
   isBackend: true
+  extraVolumes:
+    - name: media-storage
+      persistentVolumeClaim:
+        claimName: media-pvc
+  extraVolumeMounts:
+    - name: media-storage
+      mountPath: /images
+  initContainers:
+    - name: init-media-storage
+      image: "thu2005/yas-media:main"
+      command:
+        - sh
+        - -c
+        - |
+          if [ -d /images ] && [ ! -d /images-mount/sample ]; then
+            echo "Copying baseline images..."
+            cp -r /images/. /images-mount/
+          else
+            echo "Baseline images already exist or /images folder is not present in this docker image."
+          fi
+      volumeMounts:
+        - name: media-storage
+          mountPath: /images-mount
 
 customer:
   enabled: false
