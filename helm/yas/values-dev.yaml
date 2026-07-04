@@ -69,7 +69,7 @@ cart:
 order:
   enabled: true
   image:
-    tag: 6fb564e1-order-customer-varchar
+    tag: b1caff05-order-no-coupon
   podAnnotations:
     rollout.yas.dev/issuer-fix: "1"
 payment:
@@ -80,12 +80,6 @@ payment:
     rollout.yas.dev/issuer-fix: "1"
   env:
     YAS_PUBLIC_URL: "http://storefront.yas.local/complete-payment"
-promotion:
-  enabled: true
-  image:
-    tag: main
-  podAnnotations:
-    rollout.yas.dev/issuer-fix: "1"
 inventory:
   enabled: true
   image:

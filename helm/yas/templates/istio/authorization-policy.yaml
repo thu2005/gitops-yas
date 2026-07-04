@@ -232,23 +232,6 @@ spec:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/order"
 ---
-# Allow order to update promotion usage during checkout.
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-order-to-promotion
-  namespace: {{ .Release.Namespace }}
-spec:
-  selector:
-    matchLabels:
-      app: promotion
-  action: ALLOW
-  rules:
-    - from:
-        - source:
-            principals:
-              - "cluster.local/ns/{{ .Release.Namespace }}/sa/order"
----
 # Allow storefront-bff, backoffice-bff, and product to call media.
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
