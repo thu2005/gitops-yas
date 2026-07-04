@@ -1,5 +1,6 @@
 global:
   environment: staging
+  domainPrefix: "staging-"
 
 istio:
   enabled: true  # Istio đã cài trên GKE cluster

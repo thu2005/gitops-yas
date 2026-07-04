@@ -23,27 +23,27 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   hosts:
-    - storefront.yas.local
-    - backoffice.yas.local
-    - swagger.yas.local
+    - {{ default "" .Values.global.domainPrefix }}storefront.yas.local
+    - {{ default "" .Values.global.domainPrefix }}backoffice.yas.local
+    - {{ default "" .Values.global.domainPrefix }}swagger.yas.local
   gateways:
     - yas-gateway
   http:
     - match:
         - authority:
-            exact: storefront.yas.local
+            exact: {{ default "" .Values.global.domainPrefix }}storefront.yas.local
           uri:
             prefix: /api
         - authority:
-            exact: storefront.yas.local
+            exact: {{ default "" .Values.global.domainPrefix }}storefront.yas.local
           uri:
             prefix: /oauth2
         - authority:
-            exact: storefront.yas.local
+            exact: {{ default "" .Values.global.domainPrefix }}storefront.yas.local
           uri:
             prefix: /login
         - authority:
-            exact: storefront.yas.local
+            exact: {{ default "" .Values.global.domainPrefix }}storefront.yas.local
           uri:
             prefix: /logout
       route:
@@ -53,7 +53,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: storefront.yas.local
+            exact: {{ default "" .Values.global.domainPrefix }}storefront.yas.local
       route:
         - destination:
             host: storefront-ui.{{ .Release.Namespace }}.svc.cluster.local
@@ -61,19 +61,19 @@ spec:
               number: 3000
     - match:
         - authority:
-            exact: backoffice.yas.local
+            exact: {{ default "" .Values.global.domainPrefix }}backoffice.yas.local
           uri:
             prefix: /api
         - authority:
-            exact: backoffice.yas.local
+            exact: {{ default "" .Values.global.domainPrefix }}backoffice.yas.local
           uri:
             prefix: /oauth2
         - authority:
-            exact: backoffice.yas.local
+            exact: {{ default "" .Values.global.domainPrefix }}backoffice.yas.local
           uri:
             prefix: /login
         - authority:
-            exact: backoffice.yas.local
+            exact: {{ default "" .Values.global.domainPrefix }}backoffice.yas.local
           uri:
             prefix: /logout
       route:
@@ -83,7 +83,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: backoffice.yas.local
+            exact: {{ default "" .Values.global.domainPrefix }}backoffice.yas.local
       route:
         - destination:
             host: backoffice-ui.{{ .Release.Namespace }}.svc.cluster.local
@@ -91,7 +91,7 @@ spec:
               number: 3000
     - match:
         - authority:
-            exact: swagger.yas.local
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
       route:
         - destination:
             host: swagger-ui.{{ .Release.Namespace }}.svc.cluster.local
