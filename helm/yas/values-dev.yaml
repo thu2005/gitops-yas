@@ -1,5 +1,6 @@
 global:
   environment: dev
+  configRevision: "issuer-fix-1"
 
 istio:
   enabled: true  # Istio da cai tren GKE cluster yas-dev

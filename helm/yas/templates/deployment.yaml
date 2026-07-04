@@ -20,8 +20,11 @@ spec:
     metadata:
       labels:
         app: {{ $serviceName }}
-      {{- if $serviceConfig.podAnnotations }}
+      {{- if or $serviceConfig.podAnnotations (and $serviceConfig.isBackend $.Values.global.configRevision) }}
       annotations:
+        {{- if and $serviceConfig.isBackend $.Values.global.configRevision }}
+        rollout.yas.dev/config-revision: {{ $.Values.global.configRevision | quote }}
+        {{- end }}
         {{- range $key, $val := $serviceConfig.podAnnotations }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}

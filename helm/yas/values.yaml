@@ -55,6 +55,12 @@ applicationConfig:
       password: ${POSTGRESQL_PASSWORD}
     kafka:
       bootstrap-servers: kafka-cluster-kafka-brokers.kafka:9092
+    security:
+      oauth2:
+        resourceserver:
+          jwt:
+            issuer-uri: http://identity.yas.local/realms/Yas
+            jwk-set-uri: http://identity/realms/Yas/protocol/openid-connect/certs
   yas:
     services:
       cart: http://cart/cart
