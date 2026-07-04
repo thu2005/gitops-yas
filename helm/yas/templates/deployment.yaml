@@ -32,6 +32,10 @@ spec:
       hostAliases:
         {{- toYaml $serviceConfig.hostAliases | nindent 8 }}
       {{- end }}
+      {{- if $serviceConfig.initContainers }}
+      initContainers:
+        {{- toYaml $serviceConfig.initContainers | nindent 8 }}
+      {{- end }}
       {{- if $serviceConfig.isBackend }}
       volumes:
         - name: yas-configuration

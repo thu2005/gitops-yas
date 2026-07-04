@@ -211,6 +211,22 @@ media:
   extraVolumeMounts:
     - name: media-storage
       mountPath: /images
+  initContainers:
+    - name: init-media-storage
+      image: "thu2005/yas-media:main"
+      command:
+        - sh
+        - -c
+        - |
+          if [ ! -d /images-mount/sample ]; then
+            echo "Copying baseline images..."
+            cp -r /images/. /images-mount/
+          else
+            echo "Baseline images already exist."
+          fi
+      volumeMounts:
+        - name: media-storage
+          mountPath: /images-mount
 
 customer:
   enabled: false
