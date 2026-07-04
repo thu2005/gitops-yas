@@ -234,6 +234,25 @@ spec:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/product"
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/cart"
 ---
+# Allow BFFs and customer service to call location for checkout addresses.
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-to-location
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: location
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/backoffice-bff"
+              - "cluster.local/ns/{{ .Release.Namespace }}/sa/customer"
+---
 # Allow storefront-bff to call sampledata.
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
