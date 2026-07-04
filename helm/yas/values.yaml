@@ -71,6 +71,7 @@ applicationConfig:
       order: http://order/order
       payment: http://payment/payment
       product: http://product/product
+      promotion: http://promotion/promotion
       search: http://search/search
       tax: http://tax/tax
       sampledata: http://sampledata/sampledata
@@ -302,6 +303,20 @@ payment:
     type: NodePort
     port: 80
     nodePort: 30016
+  env: {}
+  secrets: {}
+  isBackend: true
+
+promotion:
+  enabled: false
+  image:
+    repository: thu2005/yas-promotion
+    tag: main
+  resources: *backendResources
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30017
   env: {}
   secrets: {}
   isBackend: true
