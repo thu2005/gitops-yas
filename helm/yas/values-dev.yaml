@@ -54,7 +54,7 @@ cart:
 order:
   enabled: true
   image:
-    tag: main
+    tag: 6fb564e1
 inventory:
   enabled: true
   image:
@@ -62,7 +62,7 @@ inventory:
 tax:
   enabled: true
   image:
-    tag: 2094d996
+    tag: main
 search:
   enabled: true
   image:
