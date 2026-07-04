@@ -72,16 +72,3 @@ spec:
     tls:
       mode: DISABLE
 {{- end }}
----
-# Disable TLS for Elasticsearch — Spring Data ES 9.x không tương thích
-# với Istio header injection khi gọi HEAD request vào ES 8.x
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: elasticsearch-no-tls
-  namespace: {{ .Release.Namespace }}
-spec:
-  host: "elasticsearch-es-http.elasticsearch.svc.cluster.local"
-  trafficPolicy:
-    tls:
-      mode: DISABLE
