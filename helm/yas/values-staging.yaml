@@ -24,6 +24,7 @@ storefront-bff:
     nodePort: null
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+    rollout.yas.dev/payment-route: "098c4f6"
   hostAliases:
     - hostnames:
         - identity.yas.local
