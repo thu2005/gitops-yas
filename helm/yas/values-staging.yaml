@@ -75,6 +75,9 @@ media:
     type: ClusterIP
     port: 80
     nodePort: null
+  env:
+    YAS_PUBLICURL: "/api/media"
+    SERVER_SERVLET_CONTEXT_PATH: "/media"
 
 customer:
   enabled: true
