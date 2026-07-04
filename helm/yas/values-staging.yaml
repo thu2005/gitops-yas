@@ -142,6 +142,9 @@ sampledata:
     type: ClusterIP
     port: 80
     nodePort: null
+  env:
+    SPRING_DATASOURCE_PRODUCT_URL: "jdbc:postgresql://postgresql.postgres:5432/product"
+    SPRING_DATASOURCE_MEDIA_URL: "jdbc:postgresql://postgresql.postgres:5432/media"
 
 swagger-ui:
   enabled: true
