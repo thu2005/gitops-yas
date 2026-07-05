@@ -69,7 +69,7 @@ cart:
 order:
   enabled: true
   image:
-    tag: b1caff05-order-no-coupon
+    tag: main
   podAnnotations:
     rollout.yas.dev/issuer-fix: "1"
 payment:
@@ -87,7 +87,7 @@ inventory:
 tax:
   enabled: true
   image:
-    tag: 0cda603f
+    tag: a0fd7dce
 search:
   enabled: true
   image:
