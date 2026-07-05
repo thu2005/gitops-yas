@@ -1,0 +1,47 @@
+{{- $swaggerUi := index .Values "swagger-ui" -}}
+{{- if and $swaggerUi $swaggerUi.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: swagger-ui-initializer
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: swagger-ui
+data:
+  swagger-initializer.js: |
+    window.onload = function() {
+      window.ui = SwaggerUIBundle({
+        dom_id: "#swagger-ui",
+        deepLinking: true,
+        urls: [
+          { url: "/product/v3/api-docs", name: "Product" },
+          { url: "/media/v3/api-docs", name: "Media" },
+          { url: "/customer/v3/api-docs", name: "Customer" },
+          { url: "/cart/v3/api-docs", name: "Cart" },
+          { url: "/order/v3/api-docs", name: "Order" },
+          { url: "/payment/v3/api-docs", name: "Payment" },
+          { url: "/location/v3/api-docs", name: "Location" },
+          { url: "/inventory/v3/api-docs", name: "Inventory" },
+          { url: "/tax/v3/api-docs", name: "Tax" },
+          { url: "/search/v3/api-docs", name: "Search" },
+          { url: "/sampledata/v3/api-docs", name: "Sampledata" }
+        ],
+        "urls.primaryName": "Product",
+        validatorUrl: null,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout"
+      });
+
+      ui.initOAuth({
+        clientId: "swagger-ui",
+        usePkceWithAuthorizationCodeGrant: true
+      });
+    };
+{{- end }}
