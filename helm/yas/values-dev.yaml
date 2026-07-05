@@ -1,6 +1,6 @@
 global:
   environment: dev
-  configRevision: "jenkins-21"
+  configRevision: "jenkins-23"
 
 istio:
   enabled: true  # Istio da cai tren GKE cluster yas-dev
