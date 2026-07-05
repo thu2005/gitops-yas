@@ -308,6 +308,32 @@ spec:
               - "/"
 ---
 
+# Allow Swagger UI host to load OpenAPI docs from backend services through ingressgateway.
+{{- $swaggerDocsServices := list "product" "media" "customer" "cart" "order" "payment" "location" "inventory" "tax" "search" "sampledata" }}
+{{- range $service := $swaggerDocsServices }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-ingressgateway-to-{{ $service }}-api-docs
+  namespace: {{ $.Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ $service }}
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            principals:
+              - "cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"
+      to:
+        - operation:
+            paths:
+              - "/{{ $service }}/v3/api-docs"
+              - "/{{ $service }}/v3/api-docs/*"
+---
+{{- end }}
+
 # Default deny-all. Explicit ALLOW policies above define the permitted service graph.
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy

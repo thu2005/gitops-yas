@@ -92,6 +92,116 @@ spec:
     - match:
         - authority:
             exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+          uri:
+            prefix: /product
+      route:
+        - destination:
+            host: product.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+          uri:
+            prefix: /media
+      route:
+        - destination:
+            host: media.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+          uri:
+            prefix: /customer
+      route:
+        - destination:
+            host: customer.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+          uri:
+            prefix: /cart
+      route:
+        - destination:
+            host: cart.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+          uri:
+            prefix: /order
+      route:
+        - destination:
+            host: order.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+          uri:
+            prefix: /payment
+      route:
+        - destination:
+            host: payment.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+          uri:
+            prefix: /location
+      route:
+        - destination:
+            host: location.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+          uri:
+            prefix: /inventory
+      route:
+        - destination:
+            host: inventory.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+          uri:
+            prefix: /tax
+      route:
+        - destination:
+            host: tax.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+          uri:
+            prefix: /search
+      route:
+        - destination:
+            host: search.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+          uri:
+            prefix: /sampledata
+      route:
+        - destination:
+            host: sampledata.{{ .Release.Namespace }}.svc.cluster.local
+            port:
+              number: 80
+    - match:
+        - authority:
+            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
       route:
         - destination:
             host: swagger-ui.{{ .Release.Namespace }}.svc.cluster.local
