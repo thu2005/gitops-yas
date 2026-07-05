@@ -104,12 +104,16 @@ pipeline {
                     }
 
                     def gitopsTargetBranch = params.TARGET_ENV == 'staging' ? 'staging' : 'main'
-                    withCredentials([string(credentialsId: env.GITOPS_TOKEN_CREDENTIALS_ID, variable: 'GITOPS_TOKEN')]) {
+                    withCredentials([usernamePassword(
+                        credentialsId: env.GITOPS_TOKEN_CREDENTIALS_ID,
+                        usernameVariable: 'GIT_USERNAME',
+                        passwordVariable: 'GIT_PASSWORD'
+                    )]) {
                         withEnv(["GITOPS_TARGET_BRANCH=${gitopsTargetBranch}"]) {
                             sh '''
-                                git remote set-url origin https://x-access-token:${GITOPS_TOKEN}@${GITOPS_REPO_URL#https://}
                                 git config user.email "jenkins@local"
                                 git config user.name "jenkins-bot"
+                                git remote set-url origin "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/thu2005/gitops-yas.git"
                                 git add helm/yas/values-*.yaml
                                 git commit -m "cleanup: reset ${TARGET_ENV} image tags to main [build #${BUILD_NUMBER}]"
                                 git push origin HEAD:${GITOPS_TARGET_BRANCH}
