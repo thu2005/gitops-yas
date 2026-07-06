@@ -6,6 +6,7 @@ target_env="${TARGET_ENV:-dev}"
 namespace="yas-${target_env}"
 default_node_address="${DEFAULT_NODE_ADDRESS:-34.139.231.192}"
 default_ingress_address="${DEFAULT_INGRESS_ADDRESS:-35.190.132.23}"
+swagger_ui_tag="${SWAGGER_UI_TAG:-v5.17.14}"
 
 if [[ ! -f "$plan_file" ]]; then
   echo "Plan file not found: $plan_file" >&2
@@ -50,6 +51,10 @@ while IFS=$'\t' read -r svc_name branch image_tag cluster_name values_file value
   printf "  %-20s %-28s %-12s %-34s\n" "$svc_name" "$branch" "$image_tag" "$url"
 done < "$plan_file"
 
+if ! awk -F '\t' '$1 == "swagger-ui" { found = 1 } END { exit found ? 0 : 1 }' "$plan_file"; then
+  printf "  %-20s %-28s %-12s %-34s\n" "swagger-ui" "static" "$swagger_ui_tag" "http://${node_address}:30014"
+fi
+
 echo ""
 echo "Domain name:port examples:"
 printf "  %-20s %-34s\n" "SERVICE" "DOMAIN_URL"
@@ -58,6 +63,10 @@ while IFS=$'\t' read -r svc_name branch image_tag cluster_name values_file value
   [[ -n "${svc_name:-}" ]] || continue
   printf "  %-20s http://yas.%s.local:%s\n" "$svc_name" "$target_env" "$node_port"
 done < "$plan_file"
+
+if ! awk -F '\t' '$1 == "swagger-ui" { found = 1 } END { exit found ? 0 : 1 }' "$plan_file"; then
+  printf "  %-20s http://yas.%s.local:%s\n" "swagger-ui" "$target_env" "30014"
+fi
 
 echo ""
 echo "Demo web pages:"
