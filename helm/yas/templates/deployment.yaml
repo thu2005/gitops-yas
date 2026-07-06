@@ -24,13 +24,10 @@ spec:
     metadata:
       labels:
         app: {{ $serviceName }}
-      {{- if or $serviceConfig.podAnnotations $.Values.global.configRevision $serviceConfig.isBackend }}
+      {{- if or $serviceConfig.podAnnotations $.Values.global.configRevision }}
       annotations:
         {{- if $.Values.global.configRevision }}
         rollout.yas.dev/config-revision: {{ $.Values.global.configRevision | quote }}
-        {{- end }}
-        {{- if $serviceConfig.isBackend }}
-        instrumentation.opentelemetry.io/inject-java: "yas-instrumentation"
         {{- end }}
         {{- range $key, $val := $serviceConfig.podAnnotations }}
         {{ $key }}: {{ $val | quote }}
