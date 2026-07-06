@@ -31,19 +31,19 @@ spec:
   http:
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}storefront.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}storefront\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /api
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}storefront.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}storefront\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /oauth2
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}storefront.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}storefront\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /login
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}storefront.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}storefront\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /logout
       route:
@@ -53,7 +53,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}storefront.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}storefront\\.yas\\.local(:[0-9]+)?$'
       route:
         - destination:
             host: storefront-ui.{{ .Release.Namespace }}.svc.cluster.local
@@ -61,19 +61,19 @@ spec:
               number: 3000
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}backoffice.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}backoffice\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /api
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}backoffice.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}backoffice\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /oauth2
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}backoffice.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}backoffice\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /login
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}backoffice.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}backoffice\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /logout
       route:
@@ -83,7 +83,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}backoffice.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}backoffice\\.yas\\.local(:[0-9]+)?$'
       route:
         - destination:
             host: backoffice-ui.{{ .Release.Namespace }}.svc.cluster.local
@@ -91,7 +91,7 @@ spec:
               number: 3000
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /product
       route:
@@ -101,7 +101,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /media
       route:
@@ -111,7 +111,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /customer
       route:
@@ -121,7 +121,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /cart
       route:
@@ -131,7 +131,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /order
       route:
@@ -141,7 +141,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /payment
       route:
@@ -151,7 +151,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /location
       route:
@@ -161,7 +161,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /inventory
       route:
@@ -171,7 +171,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /tax
       route:
@@ -181,7 +181,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /search
       route:
@@ -191,7 +191,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
           uri:
             prefix: /sampledata
       route:
@@ -201,7 +201,7 @@ spec:
               number: 80
     - match:
         - authority:
-            exact: {{ default "" .Values.global.domainPrefix }}swagger.yas.local
+            regex: '^{{ default "" .Values.global.domainPrefix }}swagger\\.yas\\.local(:[0-9]+)?$'
       route:
         - destination:
             host: swagger-ui.{{ .Release.Namespace }}.svc.cluster.local
@@ -221,7 +221,7 @@ spec:
   http:
     - match:
         - authority:
-            exact: identity.yas.local
+            regex: '^identity\\.yas\\.local(:[0-9]+)?$'
       route:
         - destination:
             host: keycloak-service.keycloak.svc.cluster.local
