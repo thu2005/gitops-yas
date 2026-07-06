@@ -290,32 +290,6 @@ spec:
               - "cluster.local/ns/{{ .Release.Namespace }}/sa/storefront-bff"
 ---
 
-# Allow direct developer testing through Kubernetes NodePort services.
-# Internal service-to-service traffic is still constrained by the explicit ALLOW
-# policies above; this opens only the public service port selected by NodePort.
-{{- range $serviceName, $serviceConfig := .Values }}
-{{- if typeIs "map[string]interface {}" $serviceConfig }}
-{{- if and (hasKey $serviceConfig "enabled") (eq $serviceConfig.enabled true) (hasKey $serviceConfig "service") (eq (default "" $serviceConfig.service.type) "NodePort") }}
-apiVersion: security.istio.io/v1beta1
-kind: AuthorizationPolicy
-metadata:
-  name: allow-nodeport-to-{{ $serviceName }}
-  namespace: {{ $.Release.Namespace }}
-spec:
-  selector:
-    matchLabels:
-      app: {{ $serviceName }}
-  action: ALLOW
-  rules:
-    - to:
-        - operation:
-            ports:
-              - "{{ $serviceConfig.service.port }}"
----
-{{- end }}
-{{- end }}
-{{- end }}
-
 # Allow Kubernetes probes and Argo CD health checks.
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
