@@ -58,7 +58,7 @@ write_service() {
 
   printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
     "$service_name" "$branch" "$image_tag" "$cluster_name" "$values_file" \
-    "$values_key" "$argocd_app" "<gke-node-ip>" "$node_port" >> "$output_file"
+    "$values_key" "$argocd_app" "nodeport" "$node_port" >> "$output_file"
 }
 
 printf '' > "$output_file"
