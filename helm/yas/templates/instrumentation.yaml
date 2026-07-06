@@ -8,6 +8,13 @@ metadata:
 spec:
   exporter:
     endpoint: http://opentelemetry-collector.observability:4318
+  env:
+    - name: OTEL_TRACES_EXPORTER
+      value: otlp
+    - name: OTEL_METRICS_EXPORTER
+      value: none
+    - name: OTEL_LOGS_EXPORTER
+      value: none
   propagators:
     - tracecontext
     - baggage
