@@ -9,13 +9,12 @@ spec:
     mode: STRICT
 {{- range $serviceName, $serviceConfig := .Values }}
 {{- if typeIs "map[string]interface {}" $serviceConfig }}
-{{- if hasKey $serviceConfig "enabled" }}
-{{- if and (eq $serviceConfig.enabled true) $serviceConfig.isBackend }}
+{{- if and (hasKey $serviceConfig "enabled") (eq $serviceConfig.enabled true) (hasKey $serviceConfig "service") (eq (default "" $serviceConfig.service.type) "NodePort") }}
 ---
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
-  name: {{ $serviceName }}-metrics
+  name: {{ $serviceName }}-nodeport
   namespace: {{ $.Release.Namespace }}
 spec:
   selector:
@@ -24,9 +23,12 @@ spec:
   mtls:
     mode: STRICT
   portLevelMtls:
+    {{ $serviceConfig.service.port }}:
+      mode: PERMISSIVE
+    {{- if $serviceConfig.isBackend }}
     8090:
       mode: DISABLE
-{{- end }}
+    {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
