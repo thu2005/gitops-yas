@@ -253,8 +253,8 @@ customer:
 location:
   enabled: false
   image:
-    repository: ghcr.io/nashtech-garage/yas-location
-    tag: latest
+    repository: thu2005/yas-location
+    tag: main
   resources: *backendResources
   service:
     type: NodePort

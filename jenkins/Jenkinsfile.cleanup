@@ -28,6 +28,8 @@ pipeline {
         booleanParam(name: 'RESET_BACKOFFICE_UI', defaultValue: false, description: 'Reset backoffice-ui to main')
         booleanParam(name: 'RESET_BACKOFFICE_BFF', defaultValue: false, description: 'Reset backoffice-bff to main')
         booleanParam(name: 'RESET_CUSTOMER', defaultValue: false, description: 'Reset customer-service to main')
+        booleanParam(name: 'RESET_LOCATION', defaultValue: false, description: 'Reset location-service to main')
+        booleanParam(name: 'RESET_PAYMENT', defaultValue: false, description: 'Reset payment-service to main')
         booleanParam(name: 'RESET_SAMPLEDATA', defaultValue: false, description: 'Reset sampledata to main')
 
         booleanParam(name: 'DRY_RUN', defaultValue: true, description: 'Show diff without pushing GitOps commit')
@@ -62,6 +64,8 @@ pipeline {
                         ['backoffice-ui', 'backoffice-ui', params.RESET_BACKOFFICE_UI],
                         ['backoffice-bff', 'backoffice-bff', params.RESET_BACKOFFICE_BFF],
                         ['customer-service', 'customer', params.RESET_CUSTOMER],
+                        ['location-service', 'location', params.RESET_LOCATION],
+                        ['payment-service', 'payment', params.RESET_PAYMENT],
                         ['sampledata', 'sampledata', params.RESET_SAMPLEDATA]
                     ]
 

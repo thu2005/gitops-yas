@@ -104,7 +104,7 @@ customer:
 location:
   enabled: true
   image:
-    tag: latest
+    tag: main
   service:
     type: ClusterIP
     port: 80

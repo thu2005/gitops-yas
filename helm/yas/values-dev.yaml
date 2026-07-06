@@ -57,7 +57,7 @@ customer:
 location:
   enabled: true
   image:
-    tag: latest
+    tag: main
   podAnnotations:
     rollout.yas.dev/issuer-fix: "1"
 cart:
