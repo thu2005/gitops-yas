@@ -27,11 +27,17 @@ spec:
       kind: Deployment
       jqPathExpressions:
         - '.spec.template.spec.volumes[] | select(.name == "istio-envoy" or .name == "istio-certs" or .name == "istio-token")'
-    # Bỏ qua các annotations do Istio tự động gắn vào Pod template
+    # Bỏ qua các annotations tự động, nhưng vẫn để Argo CD quản lý annotation OTel.
     - group: apps
       kind: Deployment
       jqPathExpressions:
-        - '.spec.template.metadata.annotations'
+        - '.spec.template.metadata.annotations."istio.io/rev"'
+        - '.spec.template.metadata.annotations."sidecar.istio.io/status"'
+        - '.spec.template.metadata.annotations."kubectl.kubernetes.io/default-container"'
+        - '.spec.template.metadata.annotations."kubectl.kubernetes.io/default-logs-container"'
+        - '.spec.template.metadata.annotations."prometheus.io/path"'
+        - '.spec.template.metadata.annotations."prometheus.io/port"'
+        - '.spec.template.metadata.annotations."prometheus.io/scrape"'
   syncPolicy:
     automated:
       prune: true
