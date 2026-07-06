@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: observability-addons
+  namespace: argocd
+spec:
+  project: yas
+  source:
+    repoURL: https://github.com/thu2005/gitops-yas.git
+    targetRevision: main
+    path: observability
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
