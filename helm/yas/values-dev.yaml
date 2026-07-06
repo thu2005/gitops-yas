@@ -1,6 +1,6 @@
 global:
   environment: dev
-  configRevision: "jenkins-2"
+  configRevision: "jenkins-3"
 
 istio:
   enabled: true  # Istio da cai tren GKE cluster yas-dev
@@ -75,7 +75,7 @@ order:
 payment:
   enabled: true
   image:
-    tag: 6fb564e1-payment
+    tag: main
   podAnnotations:
     rollout.yas.dev/issuer-fix: "1"
   env:
