@@ -7,7 +7,27 @@ metadata:
 spec:
   mtls:
     mode: STRICT
+{{- range $serviceName, $serviceConfig := .Values }}
+{{- if typeIs "map[string]interface {}" $serviceConfig }}
+{{- if hasKey $serviceConfig "enabled" }}
+{{- if and (eq $serviceConfig.enabled true) $serviceConfig.isBackend }}
+---
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: {{ $serviceName }}-metrics
+  namespace: {{ $.Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ $serviceName }}
+  mtls:
+    mode: STRICT
   portLevelMtls:
     8090:
       mode: DISABLE
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
 {{- end }}
