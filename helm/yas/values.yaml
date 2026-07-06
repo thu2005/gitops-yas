@@ -204,6 +204,8 @@ media:
   image:
     repository: thu2005/yas-media
     tag: main
+  strategy:
+    type: Recreate
   resources: *backendResources
   service:
     type: NodePort
