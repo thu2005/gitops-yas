@@ -101,6 +101,7 @@ storefront-ui:
     nodePort: null
     annotations:
       argocd.argoproj.io/sync-wave: "-1"
+      argocd.argoproj.io/sync-options: Replace=true
   env:
     API_BASE_PATH: "http://storefront-bff/api"
 storefront-bff:
@@ -122,6 +123,7 @@ backoffice-ui:
     nodePort: null
     annotations:
       argocd.argoproj.io/sync-wave: "-1"
+      argocd.argoproj.io/sync-options: Replace=true
   env:
     API_BASE_PATH: "http://backoffice-bff/api"
 backoffice-bff:
@@ -205,6 +207,7 @@ swagger-ui:
     nodePort: null
     annotations:
       argocd.argoproj.io/sync-wave: "-1"
+      argocd.argoproj.io/sync-options: Replace=true
   podAnnotations:
     rollout.yas.dev/swagger-initializer: "yas-docs-v1"
   extraVolumes:
