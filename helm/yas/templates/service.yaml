@@ -11,6 +11,10 @@ metadata:
   namespace: {{ $.Release.Namespace }}
   labels:
     app: {{ $serviceName }}
+  {{- if $serviceConfig.service.annotations }}
+  annotations:
+    {{- toYaml $serviceConfig.service.annotations | nindent 4 }}
+  {{- end }}
 spec:
   type: {{ $serviceConfig.service.type | default "NodePort" }}
   selector:
@@ -19,7 +23,7 @@ spec:
     - name: http
       protocol: TCP
       port: {{ $serviceConfig.service.port }}
-      targetPort: {{ $serviceConfig.service.port }}
+      targetPort: {{ $serviceConfig.service.targetPort | default $serviceConfig.service.port }}
       {{- if $serviceConfig.service.nodePort }}
       nodePort: {{ $serviceConfig.service.nodePort }}
       {{- end }}

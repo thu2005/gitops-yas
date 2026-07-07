@@ -5,10 +5,102 @@ global:
 istio:
   enabled: true  # Istio da cai tren GKE cluster yas-dev
 
+nodePortWeb:
+  enabled: true
+  configRevision: "dev-nodeport-proxy-v1"
+  apps:
+    storefront-ui-nodeport:
+      enabled: true
+      sourceService: storefront-ui
+      appPort: 3000
+      proxyPort: 8080
+      nodePort: 30001
+      env:
+        API_BASE_PATH: "http://127.0.0.1:8080/api"
+      routes:
+        - path: /api/
+          host: storefront.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /oauth2
+          host: storefront.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /login
+          host: storefront.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /logout
+          host: storefront.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+    backoffice-ui-nodeport:
+      enabled: true
+      sourceService: backoffice-ui
+      appPort: 3000
+      proxyPort: 8080
+      nodePort: 30003
+      env:
+        API_BASE_PATH: "http://127.0.0.1:8080/api"
+      routes:
+        - path: /api/
+          host: backoffice.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /oauth2
+          host: backoffice.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /login
+          host: backoffice.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /logout
+          host: backoffice.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+    swagger-ui-nodeport:
+      enabled: true
+      sourceService: swagger-ui
+      appPort: 8080
+      proxyPort: 8081
+      nodePort: 30014
+      routes:
+        - path: /product
+          host: swagger.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /media
+          host: swagger.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /customer
+          host: swagger.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /cart
+          host: swagger.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /order
+          host: swagger.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /payment
+          host: swagger.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /location
+          host: swagger.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /inventory
+          host: swagger.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /tax
+          host: swagger.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /search
+          host: swagger.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+        - path: /sampledata
+          host: swagger.yas.local
+          target: http://istio-ingressgateway.istio-system.svc.cluster.local
+
 storefront-ui:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    nodePort: null
+    annotations:
+      argocd.argoproj.io/sync-wave: "-1"
   env:
     API_BASE_PATH: "http://storefront-bff/api"
 storefront-bff:
@@ -25,6 +117,11 @@ backoffice-ui:
   enabled: true
   image:
     tag: main
+  service:
+    type: ClusterIP
+    nodePort: null
+    annotations:
+      argocd.argoproj.io/sync-wave: "-1"
   env:
     API_BASE_PATH: "http://backoffice-bff/api"
 backoffice-bff:
@@ -103,6 +200,11 @@ swagger-ui:
   enabled: true
   image:
     tag: v5.17.14
+  service:
+    type: ClusterIP
+    nodePort: null
+    annotations:
+      argocd.argoproj.io/sync-wave: "-1"
   podAnnotations:
     rollout.yas.dev/swagger-initializer: "yas-docs-v1"
   extraVolumes:
