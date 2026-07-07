@@ -17,6 +17,7 @@ nodePortWeb:
       nodePort: 30001
       env:
         API_BASE_PATH: "http://127.0.0.1:8080/api"
+        HOSTNAME: "0.0.0.0"
       routes:
         - path: /api/
           host: storefront.yas.local
@@ -38,6 +39,7 @@ nodePortWeb:
       nodePort: 30003
       env:
         API_BASE_PATH: "http://127.0.0.1:8080/api"
+        HOSTNAME: "0.0.0.0"
       routes:
         - path: /api/
           host: backoffice.yas.local
