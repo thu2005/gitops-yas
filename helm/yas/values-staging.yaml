@@ -1,7 +1,7 @@
 global:
   environment: staging
   domainPrefix: "staging-"
-  configRevision: "issuer-fix-1"
+  configRevision: "staging-domain-fix-1"
 
 istio:
   enabled: true  # Istio đã cài trên GKE cluster
@@ -14,6 +14,8 @@ storefront-ui:
     type: ClusterIP
     port: 3000
     nodePort: null
+  env:
+    API_BASE_PATH: "http://storefront-bff/api"
 
 storefront-bff:
   enabled: true
@@ -31,6 +33,9 @@ storefront-bff:
         - identity.yas.local
       ip: 34.118.234.132
   env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
     SPRING_PROFILES_ACTIVE: "custom"
     SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI: "http://identity.yas.local/realms/Yas"
     YAS_SERVICES_TOKEN_IDENTITY: "http://identity.yas.local/realms/Yas/protocol/openid-connect/token"
@@ -44,6 +49,8 @@ backoffice-ui:
     type: ClusterIP
     port: 3000
     nodePort: null
+  env:
+    API_BASE_PATH: "http://backoffice-bff/api"
 
 backoffice-bff:
   enabled: true
@@ -60,6 +67,9 @@ backoffice-bff:
         - identity.yas.local
       ip: 34.118.234.132
   env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
     SPRING_PROFILES_ACTIVE: "custom"
     SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI: "http://identity.yas.local/realms/Yas"
     YAS_SERVICES_TOKEN_IDENTITY: "http://identity.yas.local/realms/Yas/protocol/openid-connect/token"
@@ -75,6 +85,10 @@ product:
     nodePort: null
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+  env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
 
 media:
   enabled: true
@@ -87,6 +101,9 @@ media:
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
   env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
     YAS_PUBLICURL: "/api/media"
     SERVER_SERVLET_CONTEXT_PATH: "/media"
 
@@ -100,6 +117,10 @@ customer:
     nodePort: null
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+  env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
 
 location:
   enabled: true
@@ -111,6 +132,10 @@ location:
     nodePort: null
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+  env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
 
 cart:
   enabled: true
@@ -122,6 +147,10 @@ cart:
     nodePort: null
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+  env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
 
 order:
   enabled: true
@@ -133,6 +162,10 @@ order:
     nodePort: null
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+  env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
 
 payment:
   enabled: true
@@ -145,7 +178,10 @@ payment:
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
   env:
-    YAS_PUBLIC_URL: "http://storefront.yas.local/complete-payment"
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
+    YAS_PUBLIC_URL: "http://staging-storefront.yas.local/complete-payment"
 
 inventory:
   enabled: true
@@ -157,6 +193,10 @@ inventory:
     nodePort: null
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+  env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
 
 tax:
   enabled: true
@@ -168,6 +208,10 @@ tax:
     nodePort: null
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+  env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
 
 search:
   enabled: true
@@ -179,6 +223,10 @@ search:
     nodePort: null
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+  env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
 
 sampledata:
   enabled: true
@@ -191,6 +239,9 @@ sampledata:
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
   env:
+    OTEL_TRACES_EXPORTER: "otlp"
+    OTEL_METRICS_EXPORTER: "none"
+    OTEL_LOGS_EXPORTER: "none"
     SPRING_DATASOURCE_PRODUCT_URL: "jdbc:postgresql://postgresql.postgres:5432/product"
     SPRING_DATASOURCE_MEDIA_URL: "jdbc:postgresql://postgresql.postgres:5432/media"
 
@@ -202,6 +253,16 @@ swagger-ui:
     type: ClusterIP
     port: 8080
     nodePort: null
+  podAnnotations:
+    rollout.yas.dev/swagger-initializer: "staging-docs-v1"
+  extraVolumes:
+    - name: swagger-ui-initializer
+      configMap:
+        name: swagger-ui-initializer
+  extraVolumeMounts:
+    - name: swagger-ui-initializer
+      mountPath: /usr/share/nginx/html/swagger-initializer.js
+      subPath: swagger-initializer.js
 
 storefrontBffExtraConfig:
   spring:
