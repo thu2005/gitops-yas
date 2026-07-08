@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: product-retry
+  namespace: yas-dev
+spec:
+  hosts:
+    - product
+    - product.yas-dev.svc.cluster.local
+  http:
+    - retries:
+        attempts: 3
+        perTryTimeout: 5s
+        retryOn: "5xx,connect-failure,reset"
+      route:
+        - destination:
+            host: product
+            port:
+              number: 80
