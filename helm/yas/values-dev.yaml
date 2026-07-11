@@ -1,6 +1,6 @@
 global:
   environment: dev
-  configRevision: "jenkins-28"
+  configRevision: "jenkins-4"
 
 istio:
   enabled: true  # Istio da cai tren GKE cluster yas-dev
@@ -188,7 +188,7 @@ inventory:
 tax:
   enabled: true
   image:
-    tag: c95e3e23
+    tag: main
 search:
   enabled: true
   image:
