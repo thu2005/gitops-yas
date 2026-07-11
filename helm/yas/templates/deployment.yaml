@@ -12,7 +12,7 @@ metadata:
   labels:
     app: {{ $serviceName }}
 spec:
-  replicas: 1
+  replicas: {{ if hasKey $serviceConfig "replicaCount" }}{{ $serviceConfig.replicaCount }}{{ else }}1{{ end }}
   {{- if $serviceConfig.strategy }}
   strategy:
     {{- toYaml $serviceConfig.strategy | nindent 4 }}
