@@ -8,7 +8,7 @@ istio:
 
 storefront-ui:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -20,7 +20,7 @@ storefront-ui:
 
 storefront-bff:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -45,7 +45,7 @@ storefront-bff:
 
 backoffice-ui:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -57,7 +57,7 @@ backoffice-ui:
 
 backoffice-bff:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -81,7 +81,7 @@ backoffice-bff:
 
 product:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -97,7 +97,7 @@ product:
 
 media:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -115,7 +115,7 @@ media:
 
 customer:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -131,7 +131,7 @@ customer:
 
 location:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -147,7 +147,7 @@ location:
 
 cart:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -163,7 +163,7 @@ cart:
 
 order:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: 6fb564e1-order-customer-varchar
   service:
@@ -179,7 +179,7 @@ order:
 
 payment:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: 6fb564e1-payment
   service:
@@ -196,7 +196,7 @@ payment:
 
 inventory:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -212,7 +212,7 @@ inventory:
 
 tax:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -228,7 +228,7 @@ tax:
 
 search:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -244,7 +244,7 @@ search:
 
 sampledata:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
   service:
@@ -262,7 +262,7 @@ sampledata:
 
 swagger-ui:
   enabled: true
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: v5.17.14
   service:
